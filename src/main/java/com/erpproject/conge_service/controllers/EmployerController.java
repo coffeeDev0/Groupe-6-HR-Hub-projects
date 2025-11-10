@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
-@RequestMapping("/employer/")
+@RequestMapping("/conge-employer/")
 public class EmployerController {
     
     @Autowired
@@ -37,12 +37,12 @@ public class EmployerController {
             }
 
             Employer employer = new Employer();
-            employer.setUserId(UUID.randomUUID());
+            employer.setUserId(employerRequest.getUserId());
             employer.setUserName(employerRequest.getUserName());
             employer.setUserPassword(employerRequest.getUserPassword());
-            employer.setRole("EMPLOYER");
             employer.setRh(rhOpt.get());
-
+            employer.setRole(employerRequest.getRole());
+            
             employerRepositorie.save(employer);
             return ResponseEntity.ok(employerRequest);
             

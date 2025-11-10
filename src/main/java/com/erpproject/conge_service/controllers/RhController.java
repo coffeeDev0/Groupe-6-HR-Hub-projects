@@ -1,7 +1,5 @@
 package com.erpproject.conge_service.controllers;
 
-import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
-@RequestMapping("/rh/")
+@RequestMapping("/conge-rh/")
 public class RhController {
     @Autowired
     private RhRepositorie rhRepositorie;
@@ -26,10 +24,10 @@ public class RhController {
     public ResponseEntity<RhRequest> postMethodName(@RequestBody RhRequest rhRequest) {
         try {
             Rh rh = new Rh();
-            rh.setUserId(UUID.randomUUID());
             rh.setUserName(rhRequest.getUserName());
             rh.setUserPassword(rhRequest.getUserPassword());
-            rh.setRole("RH");
+            rh.setRole(rhRequest.getRole());
+            rh.setUserId(rhRequest.getUserId());
 
             rhRepositorie.save(rh);
             return ResponseEntity.ok(rhRequest);
