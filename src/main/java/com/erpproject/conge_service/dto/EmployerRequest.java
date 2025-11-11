@@ -9,6 +9,6 @@ public class EmployerRequest {
     private UUID userId ;
     private String userName;
     private String userPassword;
-    private String rhId;
+    private UUID rhId;
     private String role;
 }

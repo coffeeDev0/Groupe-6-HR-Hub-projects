@@ -2,7 +2,6 @@ package com.erpproject.conge_service.controllers;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +30,7 @@ public class EmployerController {
     @PostMapping("/add")
     public ResponseEntity<EmployerRequest> addEmployer(@RequestBody EmployerRequest employerRequest) {
         try {
-            Optional<Rh> rhOpt = rhRepositorie.findById(UUID.fromString(employerRequest.getRhId()));
+            Optional<Rh> rhOpt = rhRepositorie.findById(employerRequest.getRhId());
             if (rhOpt.isEmpty()) { 
                 return ResponseEntity.badRequest().build();
             }
