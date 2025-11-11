@@ -1,0 +1,22 @@
+package com.erpproject.employer_service.models.dto;
+
+import java.util.List;
+
+import lombok.Data;
+
+@Data
+public class RhResult {
+    private String id;
+
+    private String userName;
+
+    private String userPassword;
+
+    private String role;
+    
+    
+    private List<EmployerResult> employers;
+    
+    private String rhId;
+    
+}

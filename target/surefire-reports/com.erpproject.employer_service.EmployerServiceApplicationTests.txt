@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.erpproject.employer_service.EmployerServiceApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 55.91 s -- in com.erpproject.employer_service.EmployerServiceApplicationTests
