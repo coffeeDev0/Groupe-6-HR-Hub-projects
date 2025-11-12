@@ -1,6 +1,5 @@
 package com.erpproject.employer_service.services.impl;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -8,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.erpproject.employer_service.communication.NotificationService;
-import com.erpproject.employer_service.mapper.UserMapper;
 import com.erpproject.employer_service.models.Admin;
 import com.erpproject.employer_service.models.Rh;
 import com.erpproject.employer_service.models.Roles;
@@ -19,7 +17,6 @@ import com.erpproject.employer_service.repository.AdminRepository;
 import com.erpproject.employer_service.repository.RhRepositorie;
 import com.erpproject.employer_service.repository.UserRepository;
 import com.erpproject.employer_service.services.AdminService;
-import com.erpproject.employer_service.services.UserService;
 
 import lombok.RequiredArgsConstructor;
 
