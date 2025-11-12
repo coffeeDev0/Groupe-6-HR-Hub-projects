@@ -71,8 +71,6 @@ public class AdminServiceImp implements AdminService {
         return "Role " + role.name() + " attributed to user " + user.getUserName();
     }
 
-
-
     @Override
     @Transactional
     public void createAdmin() {

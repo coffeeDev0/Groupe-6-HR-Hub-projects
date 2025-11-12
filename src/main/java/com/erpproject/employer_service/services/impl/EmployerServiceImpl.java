@@ -11,6 +11,7 @@ import com.erpproject.employer_service.models.dto.EmployerRequest;
 import com.erpproject.employer_service.models.dto.EmployerResult;
 import com.erpproject.employer_service.repository.EmployerRepositorie;
 import com.erpproject.employer_service.services.EmployerService;
+import com.erpproject.employer_service.services.UserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,6 +22,7 @@ public class EmployerServiceImpl implements EmployerService {
     private final EmployerRepositorie employerRepositorie;
     private final EmployerMapper employerMapper;
     private final NotificationService notificationService;
+    private final UserService userService;
 
     @Override
     public EmployerResult createAndNotifyEmployer(EmployerRequest employerRequest) throws Exception {
@@ -28,13 +30,17 @@ public class EmployerServiceImpl implements EmployerService {
         if(employer.getRh() == null){
             throw new Exception("Rh not found for the employer");
         }
+
+        if(userService.findByName(employerRequest.getUserName()).isPresent()){
+            throw new IllegalArgumentException("Nom de user deja utiliser");
+        }
+
         Employer savedEmployer = employerRepositorie.save(employer);
         EmployerResult savedEmployerResult = employerMapper.toDto(savedEmployer);
         
         notificationService.notifyNewEmployer(savedEmployerResult);
         return savedEmployerResult;
     }
-
 
     @Override
     public List<EmployerResult> findAllEmployer() {

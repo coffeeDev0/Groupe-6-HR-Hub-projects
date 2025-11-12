@@ -13,6 +13,7 @@ import com.erpproject.employer_service.models.dto.RhResult;
 import com.erpproject.employer_service.models.dto.UserRequest;
 import com.erpproject.employer_service.repository.RhRepositorie;
 import com.erpproject.employer_service.services.RhService;
+import com.erpproject.employer_service.services.UserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,11 +24,16 @@ public class RhServiceImpl implements RhService {
     private final RhRepositorie rhRepository;
     private final RhMapper rhMapper;
     private final NotificationService notificationService;
+    private final UserService userService;
 
     @Override
     public RhResult createRh(EmployerRequest employerRequest) {
 
         Rh rh = new Rh();
+
+        if(userService.findByName(employerRequest.getUserName()).isPresent()){
+            throw new IllegalArgumentException("Nom de user deja utiliser");
+        }
 
         rh.setUserName(employerRequest.getUserName());
         rh.setUserPassword(employerRequest.getUserPassword());
