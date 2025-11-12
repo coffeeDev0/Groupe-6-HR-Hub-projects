@@ -1,12 +1,13 @@
 package com.erpproject.employer_service.models.dto;
 
 import java.util.List;
+import java.util.UUID;
 
 import lombok.Data;
 
 @Data
 public class RhResult {
-    private String id;
+    private UUID id;
 
     private String userName;
 
@@ -17,6 +18,6 @@ public class RhResult {
     
     private List<EmployerResult> employers;
     
-    private String rhId;
+    private UUID rhId;
     
 }

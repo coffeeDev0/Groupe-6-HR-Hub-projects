@@ -2,7 +2,6 @@ package com.erpproject.employer_service.controller;
 
 import java.util.List;
 
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -42,9 +41,6 @@ public class EmployerController {
         } catch (IllegalArgumentException e) {
             log.warn("Invalid employer data: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        } catch (ResourceNotFoundException e) {
-            log.warn("Resource not found: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } catch (Exception e) {
             log.error("Error creating employer", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

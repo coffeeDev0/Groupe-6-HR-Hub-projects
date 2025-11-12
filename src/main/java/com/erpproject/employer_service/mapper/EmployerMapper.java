@@ -4,7 +4,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Component;
 
 import com.erpproject.employer_service.models.Employer;
@@ -28,11 +27,11 @@ public class EmployerMapper {
         employer.setUserName(employerRequest.getUserName());
         employer.setUserPassword(employerRequest.getUserPassword());
 
-        Optional<Rh> optionalRh = rhRepositorie.findById(UUID.fromString(employerRequest.getRhId()));
+        Optional<Rh> optionalRh = rhRepositorie.findById(employerRequest.getRhId());
         if (optionalRh.isPresent()) {
             employer.setRh(optionalRh.get());
         } else {
-            throw new ResourceNotFoundException("Rh not found with id: " + employerRequest.getRhId());
+            throw new IllegalArgumentException("Rh not found with id: " + employerRequest.getRhId());
         }
 
         employer.setRole(Roles.EMPLOYER.name());

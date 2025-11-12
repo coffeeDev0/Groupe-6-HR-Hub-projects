@@ -1,0 +1,18 @@
+package com.erpproject.employer_service.services;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.springframework.stereotype.Service;
+
+import com.erpproject.employer_service.models.dto.UserRequest;
+
+@Service
+public interface UserService {
+    public List<UserRequest> findAllUsers();
+
+    public UserRequest findById(UUID id);
+
+    public Optional <UserRequest> findByName(String userName);
+}

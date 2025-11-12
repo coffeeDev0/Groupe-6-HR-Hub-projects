@@ -1,5 +1,7 @@
 package com.erpproject.employer_service.models.dto;
 
+import java.util.UUID;
+
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -10,6 +12,6 @@ public class EmployerRequest {
     @NotNull
     private String userPassword;
     @NotNull
-    private String rhId;
+    private UUID rhId;
 
 }

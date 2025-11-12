@@ -40,9 +40,4 @@ public class EmployerServiceImpl implements EmployerService {
         return employerRepositorie.findAll();
     }
 
-    @Override
-    public Optional<Employer> findById(String id) {
-        UUID employerId = UUID.fromString(id);
-        return employerRepositorie.findById(employerId);
-    }
 }

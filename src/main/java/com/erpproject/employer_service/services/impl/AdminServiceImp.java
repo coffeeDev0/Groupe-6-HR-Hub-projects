@@ -35,24 +35,25 @@ public class AdminServiceImp implements AdminService {
     @Override
     @Transactional
     public String attributRole(User user, Roles role) {
-        
+
         if (user.getRole().equalsIgnoreCase(Roles.EMPLOYER.name()) && role == Roles.RH) {
-            
-            
+
             Rh rh = new Rh();
+            rh.setUserId(user.getUserId());
             rh.setUserName(user.getUserName());
             rh.setUserPassword(user.getUserPassword());
             rh.setRole(Roles.RH.name());
-            
-            rhRepositorie.save(rh);
+
             userRepository.delete(user);
+
+            rhRepositorie.save(rh);
 
             UserRequest rhRequest = new UserRequest();
             rhRequest.setUserId(rh.getUserId());
             rhRequest.setUserName(rh.getUserName());
-            rhRequest.setUserPassword(rh.getUserPassword()); 
+            rhRequest.setUserPassword(rh.getUserPassword());
             rhRequest.setRole(rh.getRole());
-            
+
             notificationService.notifyNewRh(rhRequest);
 
             return "User changed from EMPLOYER to RH: " + rh.getUserName();
@@ -62,6 +63,7 @@ public class AdminServiceImp implements AdminService {
         userRepository.save(user);
         return "Role " + role.name() + " attributed to user " + user.getUserName();
     }
+
 
     @Override
     @Transactional

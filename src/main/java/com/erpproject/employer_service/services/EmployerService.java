@@ -17,5 +17,4 @@ public interface EmployerService {
      */
     EmployerResult createAndNotifyEmployer(EmployerRequest employerRequest) throws Exception;
     List<Employer> findAllEmployer();
-    Optional <Employer> findById(String id);
 }
