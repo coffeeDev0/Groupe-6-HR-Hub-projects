@@ -15,4 +15,8 @@ public interface UserService {
     public Optional<UserRequest> findById(UUID id);
 
     public Optional <UserRequest> findByName(String userName);
+
+    public Boolean deleteUser(UUID id);
+
+    public String updatePassword(UUID id, String password);
 }

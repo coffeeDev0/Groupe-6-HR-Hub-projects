@@ -44,4 +44,34 @@ public class UserServiceImpl implements UserService {
             .findFirst();
         return user.map(userMapper::toDto);
     }
+
+    @Override
+    public Boolean deleteUser(UUID id){
+        Optional<User> user = userRepository.findById(id);
+        if(user.isEmpty()){
+            return false;
+        }else{
+            try{
+                userRepository.delete(user.get());
+                return true;
+            }catch(Exception e){
+                e.getMessage();
+                return false;
+            }
+        }
+
+    }
+
+    @Override
+    public String updatePassword(UUID id, String password){
+        Optional<User> user = userRepository.findById(id);
+        if(user.isEmpty()){
+            throw new IllegalArgumentException("Utilisateur non trouver");
+        }
+        User user2 = user.get();
+        user2.setUserPassword(password);
+        userRepository.save(user2);
+
+        return "Password update";
+    }
 }

@@ -14,7 +14,7 @@ import com.erpproject.employer_service.communication.NotificationService;
 import com.erpproject.employer_service.models.dto.EmployerRequest;
 import com.erpproject.employer_service.models.dto.EmployerResult;
 import com.erpproject.employer_service.services.EmployerService;
-
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,9 +26,13 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/employer")
 public class EmployerController {
 
+
+
     private final EmployerService employerService;
     private final NotificationService notificationService;
-    
+
+
+    @Operation(summary="ajout d'un employer")
     @PostMapping("/add")
     public ResponseEntity<EmployerResult> addEmployer(@Valid @RequestBody EmployerRequest employerRequest) {
         try {
@@ -44,9 +48,12 @@ public class EmployerController {
         }
     }
 
+    @Operation(summary="afficher tout les rh")
     @GetMapping("/all")
     public ResponseEntity<List<EmployerResult>> getEmployers() {
         List<EmployerResult> employers = employerService.findAllEmployer();
         return ResponseEntity.ok(employers);
     }
+
+
 }

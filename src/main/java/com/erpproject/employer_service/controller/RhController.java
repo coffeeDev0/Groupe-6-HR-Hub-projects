@@ -8,6 +8,7 @@ import com.erpproject.employer_service.models.dto.EmployerRequest;
 import com.erpproject.employer_service.models.dto.RhResult;
 import com.erpproject.employer_service.services.RhService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +24,7 @@ public class RhController {
     
     private final RhService rhService;
 
+    @Operation(summary="ajout d'un rh")
     @PostMapping("/add")
     public ResponseEntity<RhResult> createRh(@RequestBody EmployerRequest rh) {
         
@@ -30,6 +32,7 @@ public class RhController {
         return ResponseEntity.ok(createdRh);
     }
 
+    @Operation(summary="afficher tout les rh")
     @GetMapping("/all")
     public ResponseEntity<List<RhResult>> findAllRh() {
         List<RhResult> rhResults = rhService.findAllRh();
