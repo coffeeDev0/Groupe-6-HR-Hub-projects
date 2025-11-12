@@ -5,7 +5,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.erpproject.employer_service.models.dto.UserRequest;
@@ -14,9 +13,10 @@ import com.erpproject.employer_service.services.UserService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-@Controller
-@RestController("/users")
+@RestController
+@RequestMapping("/user")
 @RequiredArgsConstructor
 public class UserController {
     
@@ -30,8 +30,9 @@ public class UserController {
     
     @GetMapping("/{id}")
     public ResponseEntity<UserRequest> getUserById(UUID id) {
-        UserRequest user = userService.findById(id);
-        return ResponseEntity.ok(user);
+        Optional<UserRequest> user = userService.findById(id);
+        return user.map(ResponseEntity::ok)
+                    .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/name/{userName}")

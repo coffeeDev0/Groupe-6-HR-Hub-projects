@@ -20,4 +20,13 @@ public class UserMapper {
         userRequest.setRole(user.getRole());
         return userRequest;
     }
+
+    public User toEntity(UserRequest userRequest) {
+        User user = new User();
+        user.setUserId(userRequest.getUserId());
+        user.setUserName(userRequest.getUserName());
+        user.setUserPassword(userRequest.getUserPassword());
+        user.setRole(userRequest.getRole());
+        return user;
+    }
 }

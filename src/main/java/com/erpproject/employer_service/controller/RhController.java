@@ -3,8 +3,6 @@ package com.erpproject.employer_service.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.erpproject.employer_service.models.dto.EmployerRequest;
 import com.erpproject.employer_service.models.dto.RhResult;
@@ -14,11 +12,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 
-@Controller
+@RestController
 @RequiredArgsConstructor
-@RestController("/rh")
+@RequestMapping("/rh")
 public class RhController {
     
     private final RhService rhService;

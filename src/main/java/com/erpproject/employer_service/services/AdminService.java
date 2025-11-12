@@ -1,11 +1,12 @@
 package com.erpproject.employer_service.services;
 
+import java.util.UUID;
+
 import com.erpproject.employer_service.models.Roles;
-import com.erpproject.employer_service.models.User;
 
 public interface AdminService {
 
-    public String attributRole(User user, Roles role);
+    public String attributRole(UUID id, Roles role);
 
     public void createAdmin();
 }

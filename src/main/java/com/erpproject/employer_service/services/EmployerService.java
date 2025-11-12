@@ -1,9 +1,6 @@
 package com.erpproject.employer_service.services;
 
 import java.util.List;
-import java.util.Optional;
-
-import com.erpproject.employer_service.models.Employer;
 import com.erpproject.employer_service.models.dto.EmployerRequest;
 import com.erpproject.employer_service.models.dto.EmployerResult;
 
@@ -16,5 +13,5 @@ public interface EmployerService {
      * @throws Exception en cas d'erreur de persistance ou d'appel au service externe.
      */
     EmployerResult createAndNotifyEmployer(EmployerRequest employerRequest) throws Exception;
-    List<Employer> findAllEmployer();
+    List<EmployerResult> findAllEmployer();
 }

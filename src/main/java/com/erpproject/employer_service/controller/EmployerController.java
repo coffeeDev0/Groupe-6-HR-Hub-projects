@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 import com.erpproject.employer_service.communication.NotificationService;
-import com.erpproject.employer_service.mapper.EmployerMapper;
-import com.erpproject.employer_service.models.Employer;
 import com.erpproject.employer_service.models.dto.EmployerRequest;
 import com.erpproject.employer_service.models.dto.EmployerResult;
 import com.erpproject.employer_service.services.EmployerService;
@@ -29,7 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 public class EmployerController {
 
     private final EmployerService employerService;
-    private final EmployerMapper employerMapper;
     private final NotificationService notificationService;
     
     @PostMapping("/add")
@@ -49,10 +46,7 @@ public class EmployerController {
 
     @GetMapping("/all")
     public ResponseEntity<List<EmployerResult>> getEmployers() {
-        List<Employer> employers = employerService.findAllEmployer();
-        List<EmployerResult> employerResults = employers.stream()
-            .map(employerMapper::toDto)
-            .toList();
-        return ResponseEntity.ok(employerResults);
+        List<EmployerResult> employers = employerService.findAllEmployer();
+        return ResponseEntity.ok(employers);
     }
 }

@@ -31,12 +31,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public  UserRequest findById(UUID id) {
+    public  Optional<UserRequest> findById(UUID id) {
         Optional<User> user = userRepository.findById(id);
-        if (user.isEmpty()) {
-            throw new IllegalArgumentException("User not found with id: " + id);
-        }
-        return userMapper.toDto(user.get());
+        return user.map(userMapper::toDto);
     }
 
     @Override

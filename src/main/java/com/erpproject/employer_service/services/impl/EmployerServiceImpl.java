@@ -2,10 +2,9 @@ package com.erpproject.employer_service.services.impl;
 
 
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 import org.springframework.stereotype.Service;
 
+import com.erpproject.employer_service.communication.NotificationService;
 import com.erpproject.employer_service.mapper.EmployerMapper;
 import com.erpproject.employer_service.models.Employer;
 import com.erpproject.employer_service.models.dto.EmployerRequest;
@@ -21,7 +20,7 @@ public class EmployerServiceImpl implements EmployerService {
 
     private final EmployerRepositorie employerRepositorie;
     private final EmployerMapper employerMapper;
-
+    private final NotificationService notificationService;
 
     @Override
     public EmployerResult createAndNotifyEmployer(EmployerRequest employerRequest) throws Exception {
@@ -31,13 +30,19 @@ public class EmployerServiceImpl implements EmployerService {
         }
         Employer savedEmployer = employerRepositorie.save(employer);
         EmployerResult savedEmployerResult = employerMapper.toDto(savedEmployer);
+        
+        notificationService.notifyNewEmployer(savedEmployerResult);
         return savedEmployerResult;
     }
 
 
     @Override
-    public List<Employer> findAllEmployer() {
-        return employerRepositorie.findAll();
+    public List<EmployerResult> findAllEmployer() {
+        List<Employer> employers = employerRepositorie.findAll();
+        List<EmployerResult> employerResults = employers.stream()
+                .map(employerMapper::toDto)
+                .toList();
+        return employerResults;
     }
 
 }

@@ -2,12 +2,9 @@ package com.erpproject.employer_service.mapper;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import com.erpproject.employer_service.models.Employer;
 import com.erpproject.employer_service.models.Rh;
 import com.erpproject.employer_service.models.Roles;
 import com.erpproject.employer_service.models.dto.EmployerRequest;
@@ -15,12 +12,10 @@ import com.erpproject.employer_service.models.dto.EmployerResult;
 import com.erpproject.employer_service.models.dto.RhResult;
 import com.erpproject.employer_service.repository.RhRepositorie;
 
-import lombok.Data;
-
-@Data
 @Component
 public class RhMapper {
 
+    @Autowired
     private EmployerMapper employerMapper;
 
     @Autowired
@@ -34,17 +29,17 @@ public class RhMapper {
         rhResult.setRole(rh.getRole());
         rhResult.setRhId(rh.getUserId());
 
-        List<Employer> employers = rh.getEmployers();
+        List<EmployerResult> employerResults = (rh.getEmployers() != null)
+                ? rh.getEmployers().stream()
+                        .map(employerMapper::toDto)
+                        .toList()
+                : List.of();
 
-        List<EmployerResult> employerResults = employers.stream()
-                .map(employer -> employerMapper.toDto(employer))
-                .toList();
         rhResult.setEmployers(employerResults);
-
         return rhResult;
     }
 
-    public Rh toEntity(EmployerRequest employer){
+    public Rh toEntity(EmployerRequest employer) {
         Rh rh = new Rh();
         rh.setUserName(employer.getUserName());
         rh.setUserPassword(employer.getUserPassword());
@@ -57,7 +52,6 @@ public class RhMapper {
         }
 
         rh.setRole(Roles.RH.name());
-        
         return rh;
     }
 }

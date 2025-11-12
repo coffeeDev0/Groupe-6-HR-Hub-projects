@@ -12,7 +12,7 @@ import com.erpproject.employer_service.models.dto.UserRequest;
 public interface UserService {
     public List<UserRequest> findAllUsers();
 
-    public UserRequest findById(UUID id);
+    public Optional<UserRequest> findById(UUID id);
 
     public Optional <UserRequest> findByName(String userName);
 }

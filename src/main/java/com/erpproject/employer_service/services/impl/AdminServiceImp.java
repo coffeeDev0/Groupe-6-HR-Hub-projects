@@ -1,19 +1,25 @@
 package com.erpproject.employer_service.services.impl;
 
+import java.util.Optional;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.erpproject.employer_service.communication.NotificationService;
+import com.erpproject.employer_service.mapper.UserMapper;
 import com.erpproject.employer_service.models.Admin;
 import com.erpproject.employer_service.models.Rh;
 import com.erpproject.employer_service.models.Roles;
 import com.erpproject.employer_service.models.User;
+import com.erpproject.employer_service.models.dto.EmployerResult;
 import com.erpproject.employer_service.models.dto.UserRequest;
 import com.erpproject.employer_service.repository.AdminRepository;
 import com.erpproject.employer_service.repository.RhRepositorie;
 import com.erpproject.employer_service.repository.UserRepository;
 import com.erpproject.employer_service.services.AdminService;
+import com.erpproject.employer_service.services.UserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -34,17 +40,17 @@ public class AdminServiceImp implements AdminService {
 
     @Override
     @Transactional
-    public String attributRole(User user, Roles role) {
-
+    public String attributRole(UUID id, Roles role) {
+        User user = userRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + id));
         if (user.getRole().equalsIgnoreCase(Roles.EMPLOYER.name()) && role == Roles.RH) {
 
             Rh rh = new Rh();
-            rh.setUserId(user.getUserId());
             rh.setUserName(user.getUserName());
             rh.setUserPassword(user.getUserPassword());
             rh.setRole(Roles.RH.name());
 
-            userRepository.delete(user);
+            userRepository.deleteById(user.getUserId());
 
             rhRepositorie.save(rh);
 
@@ -61,8 +67,10 @@ public class AdminServiceImp implements AdminService {
 
         user.setRole(role.name());
         userRepository.save(user);
+
         return "Role " + role.name() + " attributed to user " + user.getUserName();
     }
+
 
 
     @Override
@@ -73,7 +81,11 @@ public class AdminServiceImp implements AdminService {
             admin.setUserName(adminName);
             admin.setUserPassword(adminPassword); 
             admin.setRole(Roles.ADMIN.name());
+            
             adminRepository.save(admin);
+
+            admin.setRh(admin);
+            rhRepositorie.save(admin);
             
             UserRequest adminRequest = new UserRequest();
             adminRequest.setUserId(admin.getUserId());
@@ -82,6 +94,15 @@ public class AdminServiceImp implements AdminService {
             adminRequest.setRole(admin.getRole());
 
             notificationService.notifyNewRh(adminRequest);
+
+            EmployerResult employerRequest = new EmployerResult();
+            employerRequest.setUserId(admin.getUserId());
+            employerRequest.setUserName(admin.getUserName());
+            employerRequest.setUserPassword(admin.getUserPassword());
+            employerRequest.setRole(admin.getRole());
+            employerRequest.setRhId(admin.getUserId());
+
+            notificationService.notifyNewEmployer(employerRequest);
         }
     }
 }
