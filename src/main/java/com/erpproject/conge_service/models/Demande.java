@@ -1,6 +1,6 @@
 package com.erpproject.conge_service.models;
 
-import java.util.List;
+import java.util.Date;
 import java.util.UUID;
 
 import jakarta.persistence.*;
@@ -12,7 +12,7 @@ import lombok.Data;
 public class Demande {
     
     @Id
-    // @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID demandeId;
     
     @Column(name = "raison", nullable = false)
@@ -21,9 +21,17 @@ public class Demande {
     @Column(name = "status" )
     private String status= "EN ATTENTE";
 
+    @Column(name = "commentaire")
     private String commentaire;
+
+    @Column(name = "dateDebut", nullable = false)
+    private Date dateDebut;
     
-    // Relation avec EmployerDemande (OneToMany)
-    @OneToMany(mappedBy = "demande", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<EmployerDemande> employerDemandes;
+    @Column(name = "dateFin", nullable = false)
+    private Date dateFin;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "employer_id", nullable = false)
+    private Employer employer;
+
 }

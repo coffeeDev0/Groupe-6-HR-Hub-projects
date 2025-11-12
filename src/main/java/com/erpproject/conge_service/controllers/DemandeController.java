@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,13 +19,13 @@ import com.erpproject.conge_service.dto.DemandeRequest;
 import com.erpproject.conge_service.dto.DemandeSearch;
 import com.erpproject.conge_service.models.Demande;
 import com.erpproject.conge_service.models.Employer;
-import com.erpproject.conge_service.models.EmployerDemande;
 import com.erpproject.conge_service.repositories.DemandeRepositorie;
-import com.erpproject.conge_service.repositories.EmployerDemandeRepositorie;
 import com.erpproject.conge_service.repositories.EmployerRepositorie;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 @RestController
 @RequestMapping("/demande/")
@@ -34,10 +35,10 @@ public class DemandeController {
     private DemandeRepositorie demandeRepositorie;
 
     @Autowired
-    private EmployerDemandeRepositorie employerDemandeRepositorie;
+    private EmployerRepositorie employerRepositorie;
 
     @Autowired
-    private EmployerRepositorie employerRepositorie;
+    private com.erpproject.conge_service.services.DemandeService demandeService;
 
     @Operation(summary = "Créer une nouvelle demande de congé")
     @ApiResponse(responseCode = "200", description = "Demande créée avec succès")
@@ -56,23 +57,19 @@ public class DemandeController {
             Employer employer = employerOpt.get();
 
             Demande demande = new Demande();
-            demande.setDemandeId(UUID.randomUUID());
             demande.setRaison(demandeRequest.getRaison());
             demande.setStatus("EN COURS");
+            demande.setDateDebut(demandeRequest.getDateDebut());
+            demande.setDateFin(demandeRequest.getDateFin());
+            demande.setEmployer(employer);
+
             Demande savedDemande = demandeRepositorie.save(demande);
 
-            EmployerDemande employerDemande = new EmployerDemande();
-            employerDemande.setDateDebut(demandeRequest.getDateDebut());
-            employerDemande.setDateFin(demandeRequest.getDateFin());
-            employerDemande.setDemande(savedDemande);
-            employerDemande.setEmployer(employer);
-            
-            
-            employerDemandeRepositorie.save(employerDemande);
+
             DemandeRequest demandeResponse = new DemandeRequest();
             demandeResponse.setRaison(savedDemande.getRaison());
-            demandeResponse.setDateDebut(employerDemande.getDateDebut());
-            demandeResponse.setDateFin(employerDemande.getDateFin());
+            demandeResponse.setDateDebut(savedDemande.getDateDebut());
+            demandeResponse.setDateFin(savedDemande.getDateFin());
             return ResponseEntity.ok(demandeResponse);
             
         } catch (Exception e) {
@@ -85,17 +82,17 @@ public class DemandeController {
     @ApiResponse(responseCode = "200", description = "Liste des demandes")
     @GetMapping("/all")
     public ResponseEntity<List<DemandeSearch>> getAllDemandes() {
-        List<EmployerDemande> demandes = employerDemandeRepositorie.findAll();
+        List<Demande> demandes = demandeRepositorie.findAll();
         List<DemandeSearch> demandesSearchs = demandes.stream().map(demande -> {
             DemandeSearch dto = new DemandeSearch();
-            dto.setRaison(demande.getDemande().getRaison());
-            dto.setDemandeId(demande.getId());
+            dto.setDemandeId(demande.getDemandeId());
             dto.setEmployerId(demande.getEmployer().getUserId());
             dto.setDateDebut(demande.getDateDebut());
             dto.setDateFin(demande.getDateFin());
-            dto.setStatus(demande.getDemande().getStatus());
+            dto.setStatus(demande.getStatus());
             dto.setRhId(demande.getEmployer().getRh().getUserId());
-            dto.setCommentaire(demande.getDemande().getCommentaire());
+            dto.setRaison(demande.getRaison());
+            dto.setCommentaire(demande.getCommentaire());
             return dto;
         }).toList();
         return ResponseEntity.ok(demandesSearchs);
@@ -104,17 +101,17 @@ public class DemandeController {
     @Operation(summary = "Récupérer les demandes d'un employé")
     @GetMapping("/{userId}")
     public ResponseEntity<List<DemandeSearch>> getDemandesByEmployer(@PathVariable("userId") String userId) {
-        List<EmployerDemande> demandes = employerDemandeRepositorie.findByEmployer_UserId(UUID.fromString(userId));
+        List<Demande> demandes = demandeService.findDemandeByName(userId);
         List<DemandeSearch> demandesSearchs = demandes.stream().map(demande -> {
             DemandeSearch dto = new DemandeSearch();
-            dto.setRaison(demande.getDemande().getRaison());
-            dto.setDemandeId(demande.getId());
+            dto.setRaison(demande.getRaison());
+            dto.setDemandeId(demande.getDemandeId());
             dto.setEmployerId(demande.getEmployer().getUserId());
             dto.setDateDebut(demande.getDateDebut());
             dto.setDateFin(demande.getDateFin());
-            dto.setStatus(demande.getDemande().getStatus());
+            dto.setStatus(demande.getStatus());
             dto.setRhId(demande.getEmployer().getRh().getUserId());
-                        dto.setCommentaire(demande.getDemande().getCommentaire());
+            dto.setCommentaire(demande.getCommentaire());
             return dto;
         }).toList();
         return ResponseEntity.ok(demandesSearchs);
@@ -123,19 +120,18 @@ public class DemandeController {
     @Operation(summary = "Evaluer(accepter/refuser) une demande de congé")
     @PostMapping("/evaluate/{demandeId}")
     public ResponseEntity<String> evaluateDemande(
-        @PathVariable("demandeId") String demandeId,
+        @PathVariable("demandeId") UUID demandeId,
         @RequestBody DemandeEvaluate demandeEvaluate) {
         try {
-            Optional<EmployerDemande> demandeOpt = employerDemandeRepositorie.findById(UUID.fromString(demandeId));
+            Optional<Demande> demandeOpt = demandeRepositorie.findById(demandeId);
             if (demandeOpt.isEmpty()) {
                 return ResponseEntity.notFound().build();
             }
-            EmployerDemande employerDemande = demandeOpt.get();
-            Employer employer = employerDemande.getEmployer();
+            Demande demande = demandeOpt.get();
+            Employer employer = demande.getEmployer();
             if (employer.getRh() == null || !employer.getRh().getUserId().equals(demandeEvaluate.getRhId())) {
                 return ResponseEntity.status(403).body("Vous n'êtes pas autorisé à évaluer cette demande");
             }
-            Demande demande = demandeOpt.get().getDemande();
             demande.setStatus(demandeEvaluate.getStatus());
             demande.setCommentaire(demandeEvaluate.getCommentaire());
             demandeRepositorie.save(demande);
@@ -145,4 +141,22 @@ public class DemandeController {
             }
         return ResponseEntity.ok("Statut mis à jour avec succès");
     }
+
+    @Operation(summary = "supprimer une demande")
+    @DeleteMapping("/{demandeId}")
+    public ResponseEntity<String> deleteDemande(@PathVariable UUID demandeId){
+        if(demandeService.deleteDemande(demandeId)){
+            return ResponseEntity.ok("Supprimer avec succes");
+        }else{
+            return ResponseEntity.notFound().build();
+        }
+        
+    }
+
+    @Operation(summary = "mise a jour demande")
+    @PutMapping("/{demandeId}")
+    public DemandeRequest updateDemande(@PathVariable UUID demandeId, @RequestBody DemandeRequest demandeRequest) {
+        return demandeService.updateDemande(demandeId, demandeRequest);
+    }
+
 }

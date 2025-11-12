@@ -26,7 +26,7 @@ public class Employer {
 
     // Relation avec EmployerDemande (OneToMany)
     @OneToMany(mappedBy = "employer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<EmployerDemande> demandes;
+    private List<Demande> demandes;
 
     // Relation avec Rh (ManyToOne)
     @ManyToOne(fetch = FetchType.LAZY)

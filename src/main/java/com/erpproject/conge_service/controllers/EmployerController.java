@@ -13,9 +13,12 @@ import com.erpproject.conge_service.models.Employer;
 import com.erpproject.conge_service.models.Rh;
 import com.erpproject.conge_service.repositories.EmployerRepositorie;
 import com.erpproject.conge_service.repositories.RhRepositorie;
+import com.erpproject.conge_service.services.EmployerService;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
+
 
 @RestController
 @RequestMapping("/conge-employer/")
@@ -26,6 +29,9 @@ public class EmployerController {
     
     @Autowired
     private RhRepositorie rhRepositorie;
+
+    @Autowired
+    private EmployerService employerService;
     
     @PostMapping("/add")
     public ResponseEntity<EmployerRequest> addEmployer(@RequestBody EmployerRequest employerRequest) {
@@ -54,7 +60,13 @@ public class EmployerController {
     
     // Récupérer tous les employés avec leur RH
     @GetMapping("/all")
-    public ResponseEntity<List<Employer>> getAllEmployers() {
-        return ResponseEntity.ok(employerRepositorie.findAll());
+    public ResponseEntity<List<EmployerRequest>> getAllEmployers() {
+        return ResponseEntity.ok(employerService.findAllEmployer());
     }
+
+    @GetMapping("/name/{name}")
+    public ResponseEntity<Optional<EmployerRequest>> getUserByName(String userName) {
+        return ResponseEntity.ok(employerService.findByName(userName));
+    }
+    
 }
