@@ -12,6 +12,7 @@ import com.erpproject.employer_service.models.dto.EmployerRequest;
 import com.erpproject.employer_service.models.dto.RhResult;
 import com.erpproject.employer_service.models.dto.UserRequest;
 import com.erpproject.employer_service.repository.RhRepositorie;
+import com.erpproject.employer_service.secutity.PasswordUtils;
 import com.erpproject.employer_service.services.RhService;
 import com.erpproject.employer_service.services.UserService;
 
@@ -25,6 +26,7 @@ public class RhServiceImpl implements RhService {
     private final RhMapper rhMapper;
     private final NotificationService notificationService;
     private final UserService userService;
+    private final PasswordUtils passwordUtils;
 
     @Override
     public RhResult createRh(EmployerRequest employerRequest) {
@@ -36,7 +38,8 @@ public class RhServiceImpl implements RhService {
         }
 
         rh.setUserName(employerRequest.getUserName());
-        rh.setUserPassword(employerRequest.getUserPassword());
+        rh.setUserPassword(passwordUtils.hashPassword(employerRequest.getUserPassword()));
+        
         Optional<Rh> rh2 = rhRepository.findById(employerRequest.getRhId());
         
         if(rh2.isEmpty()){

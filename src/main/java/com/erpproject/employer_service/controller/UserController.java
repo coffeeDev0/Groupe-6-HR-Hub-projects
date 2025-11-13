@@ -67,4 +67,15 @@ public class UserController {
         return ResponseEntity.ok(userService.updatePassword(id, password) );
     }
 
-}
+
+    @Operation(summary = "supprimer un utilisateur par son nom")
+    @DeleteMapping("/name/{userName}")
+    public ResponseEntity<String> deleteUserByName(@PathVariable String userName) {
+        if(userService.deleteByName(userName)){
+            return ResponseEntity.ok("User deleted successfully");
+        }else{
+            throw new IllegalArgumentException("User not found");
+        }
+    }
+
+}   

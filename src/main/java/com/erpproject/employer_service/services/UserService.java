@@ -19,4 +19,6 @@ public interface UserService {
     public Boolean deleteUser(UUID id);
 
     public String updatePassword(UUID id, String password);
+
+    public Boolean deleteByName(String userName);
 }

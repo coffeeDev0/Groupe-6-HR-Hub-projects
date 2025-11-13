@@ -74,4 +74,17 @@ public class UserServiceImpl implements UserService {
 
         return "Password update";
     }
+
+    @Override
+    public Boolean deleteByName(String userName){
+        Optional<UserRequest> userRequest = findByName(userName);
+        if(userRequest.isEmpty()){
+            return false;
+        }
+
+        User user = userMapper.toEntity(userRequest.get());
+        userRepository.delete(user);
+        return true;
+    }
+
 }

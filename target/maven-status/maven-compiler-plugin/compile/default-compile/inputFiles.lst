@@ -5,7 +5,11 @@
 /home/prosper/eclipse-workspace/ERP Project/employer-service/src/main/java/com/erpproject/employer_service/communication/RabbitConfig.java
 /home/prosper/eclipse-workspace/ERP Project/employer-service/src/main/java/com/erpproject/employer_service/controller/AdminController.java
 /home/prosper/eclipse-workspace/ERP Project/employer-service/src/main/java/com/erpproject/employer_service/controller/EmployerController.java
+/home/prosper/eclipse-workspace/ERP Project/employer-service/src/main/java/com/erpproject/employer_service/controller/RhController.java
+/home/prosper/eclipse-workspace/ERP Project/employer-service/src/main/java/com/erpproject/employer_service/controller/UserController.java
 /home/prosper/eclipse-workspace/ERP Project/employer-service/src/main/java/com/erpproject/employer_service/mapper/EmployerMapper.java
+/home/prosper/eclipse-workspace/ERP Project/employer-service/src/main/java/com/erpproject/employer_service/mapper/RhMapper.java
+/home/prosper/eclipse-workspace/ERP Project/employer-service/src/main/java/com/erpproject/employer_service/mapper/UserMapper.java
 /home/prosper/eclipse-workspace/ERP Project/employer-service/src/main/java/com/erpproject/employer_service/models/Admin.java
 /home/prosper/eclipse-workspace/ERP Project/employer-service/src/main/java/com/erpproject/employer_service/models/Employer.java
 /home/prosper/eclipse-workspace/ERP Project/employer-service/src/main/java/com/erpproject/employer_service/models/Rh.java
@@ -19,7 +23,12 @@
 /home/prosper/eclipse-workspace/ERP Project/employer-service/src/main/java/com/erpproject/employer_service/repository/EmployerRepositorie.java
 /home/prosper/eclipse-workspace/ERP Project/employer-service/src/main/java/com/erpproject/employer_service/repository/RhRepositorie.java
 /home/prosper/eclipse-workspace/ERP Project/employer-service/src/main/java/com/erpproject/employer_service/repository/UserRepository.java
+/home/prosper/eclipse-workspace/ERP Project/employer-service/src/main/java/com/erpproject/employer_service/secutity/PasswordUtils.java
 /home/prosper/eclipse-workspace/ERP Project/employer-service/src/main/java/com/erpproject/employer_service/services/AdminService.java
 /home/prosper/eclipse-workspace/ERP Project/employer-service/src/main/java/com/erpproject/employer_service/services/EmployerService.java
+/home/prosper/eclipse-workspace/ERP Project/employer-service/src/main/java/com/erpproject/employer_service/services/RhService.java
+/home/prosper/eclipse-workspace/ERP Project/employer-service/src/main/java/com/erpproject/employer_service/services/UserService.java
 /home/prosper/eclipse-workspace/ERP Project/employer-service/src/main/java/com/erpproject/employer_service/services/impl/AdminServiceImp.java
 /home/prosper/eclipse-workspace/ERP Project/employer-service/src/main/java/com/erpproject/employer_service/services/impl/EmployerServiceImpl.java
+/home/prosper/eclipse-workspace/ERP Project/employer-service/src/main/java/com/erpproject/employer_service/services/impl/RhServiceImpl.java
+/home/prosper/eclipse-workspace/ERP Project/employer-service/src/main/java/com/erpproject/employer_service/services/impl/UserServiceImpl.java

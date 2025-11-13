@@ -10,6 +10,7 @@ import com.erpproject.employer_service.models.Employer;
 import com.erpproject.employer_service.models.dto.EmployerRequest;
 import com.erpproject.employer_service.models.dto.EmployerResult;
 import com.erpproject.employer_service.repository.EmployerRepositorie;
+import com.erpproject.employer_service.secutity.PasswordUtils;
 import com.erpproject.employer_service.services.EmployerService;
 import com.erpproject.employer_service.services.UserService;
 
@@ -24,8 +25,11 @@ public class EmployerServiceImpl implements EmployerService {
     private final NotificationService notificationService;
     private final UserService userService;
 
+    private final PasswordUtils passwordUtils;
+
     @Override
     public EmployerResult createAndNotifyEmployer(EmployerRequest employerRequest) throws Exception {
+        employerRequest.setUserPassword(passwordUtils.hashPassword(employerRequest.getUserPassword()));
         Employer employer = employerMapper.toEntity(employerRequest);
         if(employer.getRh() == null){
             throw new Exception("Rh not found for the employer");

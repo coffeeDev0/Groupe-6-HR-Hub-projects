@@ -16,6 +16,7 @@ import com.erpproject.employer_service.models.dto.UserRequest;
 import com.erpproject.employer_service.repository.AdminRepository;
 import com.erpproject.employer_service.repository.RhRepositorie;
 import com.erpproject.employer_service.repository.UserRepository;
+import com.erpproject.employer_service.secutity.PasswordUtils;
 import com.erpproject.employer_service.services.AdminService;
 
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,8 @@ public class AdminServiceImp implements AdminService {
 
     @Value("${admin.password}")
     private String adminPassword;
+
+    private final PasswordUtils passwordUtils;
 
     private final AdminRepository adminRepository;
     private final UserRepository userRepository;
@@ -74,7 +77,7 @@ public class AdminServiceImp implements AdminService {
         if (adminRepository.count() == 0) {
             Admin admin = new Admin();
             admin.setUserName(adminName);
-            admin.setUserPassword(adminPassword); 
+            admin.setUserPassword(passwordUtils.hashPassword(adminPassword)); 
             admin.setRole(Roles.ADMIN.name());
             
             adminRepository.save(admin);
