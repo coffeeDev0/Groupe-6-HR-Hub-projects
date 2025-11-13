@@ -6,11 +6,12 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.erpproject.employer_service.communication.NotificationService;
+import com.erpproject.employer_service.dto.EmployerRequest;
+import com.erpproject.employer_service.dto.RhResult;
+import com.erpproject.employer_service.dto.UserRequest;
 import com.erpproject.employer_service.mapper.RhMapper;
 import com.erpproject.employer_service.models.Rh;
-import com.erpproject.employer_service.models.dto.EmployerRequest;
-import com.erpproject.employer_service.models.dto.RhResult;
-import com.erpproject.employer_service.models.dto.UserRequest;
+import com.erpproject.employer_service.models.Roles;
 import com.erpproject.employer_service.repository.RhRepositorie;
 import com.erpproject.employer_service.secutity.PasswordUtils;
 import com.erpproject.employer_service.services.RhService;
@@ -33,12 +34,15 @@ public class RhServiceImpl implements RhService {
 
         Rh rh = new Rh();
 
-        if(userService.findByName(employerRequest.getUserName()).isPresent()){
-            throw new IllegalArgumentException("Nom de user deja utiliser");
+        if(userService.findByEmail(employerRequest.getEmail()).isPresent()){
+            throw new IllegalArgumentException("Email deja utiliser");
         }
 
         rh.setUserName(employerRequest.getUserName());
         rh.setUserPassword(passwordUtils.hashPassword(employerRequest.getUserPassword()));
+        rh.setEmail(employerRequest.getEmail());
+        rh.setTel(employerRequest.getTel());
+        rh.setUserPrenom(employerRequest.getUserPrenom());
         
         Optional<Rh> rh2 = rhRepository.findById(employerRequest.getRhId());
         
@@ -55,7 +59,10 @@ public class RhServiceImpl implements RhService {
         rhRequest.setUserId(rhSaved.getUserId());
         rhRequest.setUserName(rhSaved.getUserName());
         rhRequest.setUserPassword(rhSaved.getUserPassword());
-        rhRequest.setRole(rhSaved.getRole());
+        rhRequest.setEmail(rhSaved.getEmail());
+        rhRequest.setTel(rhSaved.getTel());
+        rhRequest.setUserPrenom(rhSaved.getUserPrenom());
+        rhRequest.setRole(Roles.RH.name());
         notificationService.notifyNewRh(rhRequest);
         
         return rhResult;

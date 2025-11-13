@@ -5,11 +5,11 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.erpproject.employer_service.dto.EmployerRequest;
+import com.erpproject.employer_service.dto.EmployerResult;
 import com.erpproject.employer_service.models.Employer;
 import com.erpproject.employer_service.models.Rh;
 import com.erpproject.employer_service.models.Roles;
-import com.erpproject.employer_service.models.dto.EmployerRequest;
-import com.erpproject.employer_service.models.dto.EmployerResult;
 import com.erpproject.employer_service.repository.RhRepositorie;
 
 import lombok.Data;
@@ -25,6 +25,9 @@ public class EmployerMapper {
         Employer employer = new Employer();
         employer.setUserName(employerRequest.getUserName());
         employer.setUserPassword(employerRequest.getUserPassword());
+        employer.setEmail(employerRequest.getEmail());
+        employer.setTel(employerRequest.getTel());
+        employer.setUserPrenom(employerRequest.getUserPrenom());
 
         Optional<Rh> optionalRh = rhRepositorie.findById(employerRequest.getRhId());
         if (optionalRh.isPresent()) {
@@ -42,6 +45,9 @@ public class EmployerMapper {
         employerResult.setUserId(employer.getUserId());
         employerResult.setUserName(employer.getUserName());
         employerResult.setRole(employer.getRole());
+        employerResult.setEmail(employer.getEmail());
+        employerResult.setTel(employer.getTel());
+        employerResult.setUserPrenom(employer.getUserPrenom());
         employerResult.setUserPassword(employer.getUserPassword());
         if (employer.getRh() != null) {
             employerResult.setRhId(employer.getRh().getUserId());

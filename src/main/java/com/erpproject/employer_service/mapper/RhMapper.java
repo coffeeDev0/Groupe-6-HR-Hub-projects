@@ -5,11 +5,12 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.erpproject.employer_service.dto.EmployerRequest;
+import com.erpproject.employer_service.dto.EmployerResult;
+import com.erpproject.employer_service.dto.RhResult;
 import com.erpproject.employer_service.models.Rh;
 import com.erpproject.employer_service.models.Roles;
-import com.erpproject.employer_service.models.dto.EmployerRequest;
-import com.erpproject.employer_service.models.dto.EmployerResult;
-import com.erpproject.employer_service.models.dto.RhResult;
 import com.erpproject.employer_service.repository.RhRepositorie;
 
 @Component
@@ -27,7 +28,7 @@ public class RhMapper {
         rhResult.setUserName(rh.getUserName());
         rhResult.setUserPassword(rh.getUserPassword());
         rhResult.setRole(rh.getRole());
-        rhResult.setRhId(rh.getUserId());
+        rhResult.setRhId(rh.getRh().getUserId());
 
         List<EmployerResult> employerResults = (rh.getEmployers() != null)
                 ? rh.getEmployers().stream()
@@ -43,6 +44,9 @@ public class RhMapper {
         Rh rh = new Rh();
         rh.setUserName(employer.getUserName());
         rh.setUserPassword(employer.getUserPassword());
+        rh.setTel(employer.getTel());
+        rh.setEmail(employer.getEmail());
+        rh.setUserPrenom(employer.getUserPrenom());
 
         Optional<Rh> optionalRh = rhRepositorie.findById(employer.getRhId());
         if (optionalRh.isPresent()) {

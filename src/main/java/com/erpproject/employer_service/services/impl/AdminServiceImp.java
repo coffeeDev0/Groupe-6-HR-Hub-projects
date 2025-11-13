@@ -7,12 +7,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.erpproject.employer_service.communication.NotificationService;
+import com.erpproject.employer_service.dto.EmployerResult;
+import com.erpproject.employer_service.dto.UserRequest;
 import com.erpproject.employer_service.models.Admin;
 import com.erpproject.employer_service.models.Rh;
 import com.erpproject.employer_service.models.Roles;
 import com.erpproject.employer_service.models.User;
-import com.erpproject.employer_service.models.dto.EmployerResult;
-import com.erpproject.employer_service.models.dto.UserRequest;
 import com.erpproject.employer_service.repository.AdminRepository;
 import com.erpproject.employer_service.repository.RhRepositorie;
 import com.erpproject.employer_service.repository.UserRepository;
@@ -49,6 +49,9 @@ public class AdminServiceImp implements AdminService {
             rh.setUserName(user.getUserName());
             rh.setUserPassword(user.getUserPassword());
             rh.setRole(Roles.RH.name());
+            rh.setTel(user.getTel());
+            rh.setEmail(user.getEmail());
+            rh.setUserPrenom(user.getUserPrenom());
 
             userRepository.deleteById(user.getUserId());
 
@@ -79,6 +82,9 @@ public class AdminServiceImp implements AdminService {
             admin.setUserName(adminName);
             admin.setUserPassword(passwordUtils.hashPassword(adminPassword)); 
             admin.setRole(Roles.ADMIN.name());
+            admin.setEmail("admin@admin.com");
+            admin.setTel("00000000");
+            admin.setUserPrenom("Admin");
             
             adminRepository.save(admin);
 
@@ -90,6 +96,9 @@ public class AdminServiceImp implements AdminService {
             adminRequest.setUserName(admin.getUserName());
             adminRequest.setUserPassword(admin.getUserPassword());
             adminRequest.setRole(admin.getRole());
+            adminRequest.setEmail(admin.getEmail());
+            adminRequest.setTel(admin.getTel());
+            adminRequest.setUserPrenom(admin.getUserPrenom());
 
             notificationService.notifyNewRh(adminRequest);
 

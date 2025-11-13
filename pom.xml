@@ -62,12 +62,6 @@
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>
 
-        <!-- Spring Security (inclut BCryptPasswordEncoder) -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
-
 
         <!-- OpenAPI / Swagger UI -->
         <dependency>

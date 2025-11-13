@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
-import com.erpproject.employer_service.models.dto.UserRequest;
+import com.erpproject.employer_service.dto.UserRequest;
 
 @Service
 public interface UserService {
@@ -14,11 +14,11 @@ public interface UserService {
 
     public Optional<UserRequest> findById(UUID id);
 
-    public Optional <UserRequest> findByName(String userName);
+    public Optional <UserRequest> findByEmail(String email);
 
     public Boolean deleteUser(UUID id);
 
     public String updatePassword(UUID id, String password);
 
-    public Boolean deleteByName(String userName);
+    public Boolean deleteByEmail(String email);
 }

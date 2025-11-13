@@ -5,10 +5,10 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.erpproject.employer_service.communication.NotificationService;
+import com.erpproject.employer_service.dto.EmployerRequest;
+import com.erpproject.employer_service.dto.EmployerResult;
 import com.erpproject.employer_service.mapper.EmployerMapper;
 import com.erpproject.employer_service.models.Employer;
-import com.erpproject.employer_service.models.dto.EmployerRequest;
-import com.erpproject.employer_service.models.dto.EmployerResult;
 import com.erpproject.employer_service.repository.EmployerRepositorie;
 import com.erpproject.employer_service.secutity.PasswordUtils;
 import com.erpproject.employer_service.services.EmployerService;
@@ -35,8 +35,8 @@ public class EmployerServiceImpl implements EmployerService {
             throw new Exception("Rh not found for the employer");
         }
 
-        if(userService.findByName(employerRequest.getUserName()).isPresent()){
-            throw new IllegalArgumentException("Nom de user deja utiliser");
+        if(userService.findByEmail(employerRequest.getEmail()).isPresent()){
+            throw new IllegalArgumentException("Email deja utiliser");
         }
 
         Employer savedEmployer = employerRepositorie.save(employer);

@@ -6,9 +6,9 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import com.erpproject.employer_service.dto.UserRequest;
 import com.erpproject.employer_service.mapper.UserMapper;
 import com.erpproject.employer_service.models.User;
-import com.erpproject.employer_service.models.dto.UserRequest;
 import com.erpproject.employer_service.repository.UserRepository;
 import com.erpproject.employer_service.services.UserService;
 
@@ -37,10 +37,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<UserRequest> findByName(String userName) {
+    public Optional<UserRequest> findByEmail(String email) {
         List<User> users = userRepository.findAll();
         Optional<User> user = users.stream()
-            .filter(u -> u.getUserName().equals(userName))
+            .filter(u -> u.getEmail().equals(email))
             .findFirst();
         return user.map(userMapper::toDto);
     }
@@ -76,8 +76,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean deleteByName(String userName){
-        Optional<UserRequest> userRequest = findByName(userName);
+    public Boolean deleteByEmail(String email){
+        Optional<UserRequest> userRequest = findByEmail(email);
         if(userRequest.isEmpty()){
             return false;
         }

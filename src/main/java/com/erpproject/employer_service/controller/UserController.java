@@ -7,7 +7,7 @@ import java.util.UUID;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.erpproject.employer_service.models.dto.UserRequest;
+import com.erpproject.employer_service.dto.UserRequest;
 import com.erpproject.employer_service.services.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,10 +42,10 @@ public class UserController {
                     .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @Operation(summary="rechercher un utilisateur par son nom")
-    @GetMapping("/name/{userName}")
-    public ResponseEntity<UserRequest> getUserByName(String userName) {
-        Optional<UserRequest> user = userService.findByName(userName);
+    @Operation(summary="rechercher un utilisateur par son email")
+    @GetMapping("/email/{email}")
+    public ResponseEntity<UserRequest> getUserByEmail(@PathVariable String email) {
+        Optional<UserRequest> user = userService.findByEmail(email);
         return user.map(ResponseEntity::ok)
                     .orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -68,10 +68,10 @@ public class UserController {
     }
 
 
-    @Operation(summary = "supprimer un utilisateur par son nom")
-    @DeleteMapping("/name/{userName}")
-    public ResponseEntity<String> deleteUserByName(@PathVariable String userName) {
-        if(userService.deleteByName(userName)){
+    @Operation(summary = "supprimer un utilisateur par son email")
+    @DeleteMapping("/email/{email}")
+    public ResponseEntity<String> deleteUserByEmail(@PathVariable String email) {
+        if(userService.deleteByEmail(email)){
             return ResponseEntity.ok("User deleted successfully");
         }else{
             throw new IllegalArgumentException("User not found");

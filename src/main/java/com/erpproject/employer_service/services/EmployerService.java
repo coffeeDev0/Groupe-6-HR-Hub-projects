@@ -1,8 +1,9 @@
 package com.erpproject.employer_service.services;
 
 import java.util.List;
-import com.erpproject.employer_service.models.dto.EmployerRequest;
-import com.erpproject.employer_service.models.dto.EmployerResult;
+
+import com.erpproject.employer_service.dto.EmployerRequest;
+import com.erpproject.employer_service.dto.EmployerResult;
 
 public interface EmployerService {
     

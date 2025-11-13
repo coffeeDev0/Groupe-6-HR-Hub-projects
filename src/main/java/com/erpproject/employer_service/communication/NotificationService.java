@@ -2,8 +2,9 @@ package com.erpproject.employer_service.communication;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
-import com.erpproject.employer_service.models.dto.EmployerResult;
-import com.erpproject.employer_service.models.dto.UserRequest;
+
+import com.erpproject.employer_service.dto.EmployerResult;
+import com.erpproject.employer_service.dto.UserRequest;
 
 import lombok.RequiredArgsConstructor;
 

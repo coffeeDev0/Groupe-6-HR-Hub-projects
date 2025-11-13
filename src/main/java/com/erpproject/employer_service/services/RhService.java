@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.erpproject.employer_service.models.dto.EmployerRequest;
-import com.erpproject.employer_service.models.dto.RhResult;
+import com.erpproject.employer_service.dto.EmployerRequest;
+import com.erpproject.employer_service.dto.RhResult;
 
 @Service
 public interface RhService {

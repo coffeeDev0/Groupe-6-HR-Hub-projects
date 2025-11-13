@@ -7,6 +7,10 @@
 /home/prosper/eclipse-workspace/ERP Project/employer-service/src/main/java/com/erpproject/employer_service/controller/EmployerController.java
 /home/prosper/eclipse-workspace/ERP Project/employer-service/src/main/java/com/erpproject/employer_service/controller/RhController.java
 /home/prosper/eclipse-workspace/ERP Project/employer-service/src/main/java/com/erpproject/employer_service/controller/UserController.java
+/home/prosper/eclipse-workspace/ERP Project/employer-service/src/main/java/com/erpproject/employer_service/dto/EmployerRequest.java
+/home/prosper/eclipse-workspace/ERP Project/employer-service/src/main/java/com/erpproject/employer_service/dto/EmployerResult.java
+/home/prosper/eclipse-workspace/ERP Project/employer-service/src/main/java/com/erpproject/employer_service/dto/RhResult.java
+/home/prosper/eclipse-workspace/ERP Project/employer-service/src/main/java/com/erpproject/employer_service/dto/UserRequest.java
 /home/prosper/eclipse-workspace/ERP Project/employer-service/src/main/java/com/erpproject/employer_service/mapper/EmployerMapper.java
 /home/prosper/eclipse-workspace/ERP Project/employer-service/src/main/java/com/erpproject/employer_service/mapper/RhMapper.java
 /home/prosper/eclipse-workspace/ERP Project/employer-service/src/main/java/com/erpproject/employer_service/mapper/UserMapper.java
@@ -15,10 +19,6 @@
 /home/prosper/eclipse-workspace/ERP Project/employer-service/src/main/java/com/erpproject/employer_service/models/Rh.java
 /home/prosper/eclipse-workspace/ERP Project/employer-service/src/main/java/com/erpproject/employer_service/models/Roles.java
 /home/prosper/eclipse-workspace/ERP Project/employer-service/src/main/java/com/erpproject/employer_service/models/User.java
-/home/prosper/eclipse-workspace/ERP Project/employer-service/src/main/java/com/erpproject/employer_service/models/dto/EmployerRequest.java
-/home/prosper/eclipse-workspace/ERP Project/employer-service/src/main/java/com/erpproject/employer_service/models/dto/EmployerResult.java
-/home/prosper/eclipse-workspace/ERP Project/employer-service/src/main/java/com/erpproject/employer_service/models/dto/RhResult.java
-/home/prosper/eclipse-workspace/ERP Project/employer-service/src/main/java/com/erpproject/employer_service/models/dto/UserRequest.java
 /home/prosper/eclipse-workspace/ERP Project/employer-service/src/main/java/com/erpproject/employer_service/repository/AdminRepository.java
 /home/prosper/eclipse-workspace/ERP Project/employer-service/src/main/java/com/erpproject/employer_service/repository/EmployerRepositorie.java
 /home/prosper/eclipse-workspace/ERP Project/employer-service/src/main/java/com/erpproject/employer_service/repository/RhRepositorie.java

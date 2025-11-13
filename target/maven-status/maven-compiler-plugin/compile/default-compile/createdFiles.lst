@@ -1,4 +1,3 @@
-com/erpproject/employer_service/models/dto/EmployerRequest.class
 com/erpproject/employer_service/controller/RhController.class
 com/erpproject/employer_service/services/EmployerService.class
 com/erpproject/employer_service/communication/RabbitConfig.class
@@ -12,15 +11,12 @@ com/erpproject/employer_service/controller/UserController.class
 com/erpproject/employer_service/communication/AppConfig.class
 com/erpproject/employer_service/services/impl/AdminServiceImp.class
 com/erpproject/employer_service/services/UserService.class
-com/erpproject/employer_service/models/dto/EmployerResult.class
 com/erpproject/employer_service/DataInitializer.class
 com/erpproject/employer_service/mapper/RhMapper.class
 com/erpproject/employer_service/repository/AdminRepository.class
 com/erpproject/employer_service/communication/NotificationService.class
-com/erpproject/employer_service/models/dto/RhResult.class
 com/erpproject/employer_service/models/Rh.class
 com/erpproject/employer_service/services/RhService.class
-com/erpproject/employer_service/models/dto/UserRequest.class
 com/erpproject/employer_service/models/Employer.class
 com/erpproject/employer_service/controller/AdminController.class
 com/erpproject/employer_service/mapper/UserMapper.class

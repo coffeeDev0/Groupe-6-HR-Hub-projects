@@ -2,8 +2,8 @@ package com.erpproject.employer_service.mapper;
 
 import org.springframework.stereotype.Component;
 
+import com.erpproject.employer_service.dto.UserRequest;
 import com.erpproject.employer_service.models.User;
-import com.erpproject.employer_service.models.dto.UserRequest;
 
 import lombok.Data;
 
