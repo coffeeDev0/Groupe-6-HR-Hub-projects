@@ -20,6 +20,9 @@ public class Employer {
     
     @Column(name = "user_password", nullable = false)
     private String userPassword;
+
+    @Column(name="email")
+    private String email;
     
     @Column(name = "role", nullable = false)
     private String role;

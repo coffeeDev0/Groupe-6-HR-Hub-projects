@@ -14,5 +14,5 @@ public interface DemandeService {
 
     public DemandeRequest updateDemande(UUID demandeId, DemandeRequest demandeRequest);
 
-    public List<Demande> findDemandeByName(String userName);
+    public List<Demande> findDemandeByEmail(String email);
 }

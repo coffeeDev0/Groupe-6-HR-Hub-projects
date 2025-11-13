@@ -99,9 +99,9 @@ public class DemandeController {
     }
 
     @Operation(summary = "Récupérer les demandes d'un employé")
-    @GetMapping("/{userId}")
-    public ResponseEntity<List<DemandeSearch>> getDemandesByEmployer(@PathVariable("userId") String userId) {
-        List<Demande> demandes = demandeService.findDemandeByName(userId);
+    @GetMapping("/{email}")
+    public ResponseEntity<List<DemandeSearch>> getDemandesByEmployer(@PathVariable("email") String email) {
+        List<Demande> demandes = demandeService.findDemandeByEmail(email);
         List<DemandeSearch> demandesSearchs = demandes.stream().map(demande -> {
             DemandeSearch dto = new DemandeSearch();
             dto.setRaison(demande.getRaison());

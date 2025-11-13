@@ -33,10 +33,10 @@ public class EmployerServiceImpl implements EmployerService {
 
 
     @Override
-    public Optional<EmployerRequest> findByName(String userName){
+    public Optional<EmployerRequest> findByEmail(String email){
         List <Employer> employers = employerRepositorie.findAll();
         Optional<Employer> employer = employers.stream()
-            .filter(u -> u.getUserName().equals(userName))
+            .filter(u -> u.getEmail().equals(email))
             .findFirst();
         Optional<EmployerRequest> employerOptional = Optional.of(new EmployerRequest());
 

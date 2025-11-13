@@ -50,8 +50,8 @@ public class DemandeServiceImpl implements DemandeService {
     
     }
 
-    public List<Demande> findDemandeByName(String userName){
-        Optional<EmployerRequest> employer = employerService.findByName(userName);
+    public List<Demande> findDemandeByEmail(String email){
+        Optional<EmployerRequest> employer = employerService.findByEmail(email);
 
         if(employer.isEmpty()){
             throw new IllegalArgumentException("User pas trouver");

@@ -18,6 +18,7 @@ import com.erpproject.conge_service.services.EmployerService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 
 @RestController
@@ -64,9 +65,9 @@ public class EmployerController {
         return ResponseEntity.ok(employerService.findAllEmployer());
     }
 
-    @GetMapping("/name/{name}")
-    public ResponseEntity<Optional<EmployerRequest>> getUserByName(String userName) {
-        return ResponseEntity.ok(employerService.findByName(userName));
+    @GetMapping("/email/{email}")
+    public ResponseEntity<Optional<EmployerRequest>> getUserByEmail(@PathVariable String email) {
+        return ResponseEntity.ok(employerService.findByEmail(email));
     }
     
 }

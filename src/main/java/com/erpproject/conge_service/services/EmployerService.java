@@ -12,5 +12,5 @@ public interface EmployerService {
     
     public List<EmployerRequest> findAllEmployer();
 
-    public Optional<EmployerRequest> findByName(String userName);
+    public Optional<EmployerRequest> findByEmail(String email);
 }

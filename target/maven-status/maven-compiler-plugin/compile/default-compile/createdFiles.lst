@@ -5,7 +5,6 @@ com/erpproject/conge_service/dto/DemandeEvaluate.class
 com/erpproject/conge_service/dto/DemandeRequest.class
 com/erpproject/conge_service/models/Demande.class
 com/erpproject/conge_service/repositories/RhRepositorie.class
-com/erpproject/conge_service/models/EmployerDemande.class
 com/erpproject/conge_service/dto/RhRequest.class
 com/erpproject/conge_service/controllers/RhController.class
 com/erpproject/conge_service/communication/EmployerListener.class
@@ -13,7 +12,6 @@ com/erpproject/conge_service/models/Rh.class
 com/erpproject/conge_service/models/Employer.class
 com/erpproject/conge_service/communication/RabbitConfig.class
 com/erpproject/conge_service/controllers/DemandeController.class
-com/erpproject/conge_service/repositories/EmployerDemandeRepositorie.class
 com/erpproject/conge_service/controllers/EmployerController.class
 com/erpproject/conge_service/communication/AppConfig.class
 com/erpproject/conge_service/dto/DemandeSearch.class
