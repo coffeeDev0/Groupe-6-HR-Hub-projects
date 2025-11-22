@@ -14,11 +14,12 @@ public interface UserService {
 
     public Optional<UserRequest> findById(UUID id);
 
-    public Optional <UserRequest> findByEmail(String email);
+    public Optional<UserRequest> findByEmail(String email);
 
     public Boolean deleteUser(UUID id);
 
     public String updatePassword(UUID id, String password);
 
     public Boolean deleteByEmail(String email);
+
 }

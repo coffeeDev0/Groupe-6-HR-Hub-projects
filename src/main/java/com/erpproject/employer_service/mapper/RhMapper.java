@@ -21,7 +21,7 @@ public class RhMapper {
 
     @Autowired
     private RhRepositorie rhRepositorie;
-    
+
     public RhResult toDto(Rh rh) {
         RhResult rhResult = new RhResult();
         rhResult.setId(rh.getUserId());
@@ -47,6 +47,8 @@ public class RhMapper {
         rh.setTel(employer.getTel());
         rh.setEmail(employer.getEmail());
         rh.setUserPrenom(employer.getUserPrenom());
+        rh.setProfession(employer.getProfession());
+        rh.setStatus(employer.getStatus());
 
         Optional<Rh> optionalRh = rhRepositorie.findById(employer.getRhId());
         if (optionalRh.isPresent()) {

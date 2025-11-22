@@ -1,7 +1,8 @@
 package com.erpproject.employer_service.services.impl;
 
-
 import java.util.List;
+import java.util.UUID;
+
 import org.springframework.stereotype.Service;
 
 import com.erpproject.employer_service.communication.NotificationService;
@@ -31,17 +32,17 @@ public class EmployerServiceImpl implements EmployerService {
     public EmployerResult createAndNotifyEmployer(EmployerRequest employerRequest) throws Exception {
         employerRequest.setUserPassword(passwordUtils.hashPassword(employerRequest.getUserPassword()));
         Employer employer = employerMapper.toEntity(employerRequest);
-        if(employer.getRh() == null){
+        if (employer.getRh() == null) {
             throw new Exception("Rh not found for the employer");
         }
 
-        if(userService.findByEmail(employerRequest.getEmail()).isPresent()){
+        if (userService.findByEmail(employerRequest.getEmail()).isPresent()) {
             throw new IllegalArgumentException("Email deja utiliser");
         }
 
         Employer savedEmployer = employerRepositorie.save(employer);
         EmployerResult savedEmployerResult = employerMapper.toDto(savedEmployer);
-        
+
         notificationService.notifyNewEmployer(savedEmployerResult);
         return savedEmployerResult;
     }
@@ -55,4 +56,12 @@ public class EmployerServiceImpl implements EmployerService {
         return employerResults;
     }
 
+    @Override
+    public List<Employer> findByRh(UUID rhId) {
+        List<Employer> employers = employerRepositorie.findAll().stream()
+                .filter(u -> u.getRh().getUserId().equals(rhId))
+                .toList();
+        return employers;
+
+    }
 }

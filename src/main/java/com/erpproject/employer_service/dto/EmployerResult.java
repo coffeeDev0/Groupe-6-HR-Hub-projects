@@ -14,6 +14,7 @@ public class EmployerResult {
     private String userPrenom;
     private UUID rhId;
     private String role;
-
+    private String profession;
+    private String status;
 
 }

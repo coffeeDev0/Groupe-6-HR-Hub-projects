@@ -10,7 +10,6 @@ import javax.crypto.spec.PBEKeySpec;
 
 import org.springframework.stereotype.Component;
 
-
 @Component
 public class PasswordUtils {
 
@@ -20,12 +19,13 @@ public class PasswordUtils {
     private static final int KEY_LENGTH = 256; // bits
 
     public static String hashPassword(String password) {
-        byte[] salt = new byte[SALT_LEN];
-        RAND.nextBytes(salt);
-        byte[] hash = pbkdf2(password.toCharArray(), salt, ITERATIONS, KEY_LENGTH);
-        // Stocker sous forme: iterations:saltBase64:hashBase64
-        return ITERATIONS + ":" + Base64.getEncoder().encodeToString(salt) + ":" +
-                Base64.getEncoder().encodeToString(hash);
+        // byte[] salt = new byte[SALT_LEN];
+        // RAND.nextBytes(salt);
+        // byte[] hash = pbkdf2(password.toCharArray(), salt, ITERATIONS, KEY_LENGTH);
+        // // Stocker sous forme: iterations:saltBase64:hashBase64
+        // return ITERATIONS + ":" + Base64.getEncoder().encodeToString(salt) + ":" +
+        // Base64.getEncoder().encodeToString(hash);
+        return password;
     }
 
     public static boolean verifyPassword(String password, String stored) {
@@ -57,11 +57,4 @@ public class PasswordUtils {
         return diff == 0;
     }
 
-    // Exemple
-    public static void main(String[] args) {
-        String pw = "monSuperMotDePasse!";
-        String hash = hashPassword(pw);
-        System.out.println("Hash PBKDF2 = " + hash);
-        System.out.println("Vérif OK ? " + verifyPassword(pw, hash));
-    }
 }

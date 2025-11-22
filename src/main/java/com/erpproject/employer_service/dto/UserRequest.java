@@ -13,4 +13,6 @@ public class UserRequest {
     private String email;
     private String userPrenom;
     private String tel;
+    private String profession;
+    private String status;
 }

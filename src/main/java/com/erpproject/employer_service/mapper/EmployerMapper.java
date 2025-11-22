@@ -28,6 +28,8 @@ public class EmployerMapper {
         employer.setEmail(employerRequest.getEmail());
         employer.setTel(employerRequest.getTel());
         employer.setUserPrenom(employerRequest.getUserPrenom());
+        employer.setProfession(employerRequest.getProfession());
+        employer.setStatus(employerRequest.getStatus());
 
         Optional<Rh> optionalRh = rhRepositorie.findById(employerRequest.getRhId());
         if (optionalRh.isPresent()) {
@@ -49,6 +51,8 @@ public class EmployerMapper {
         employerResult.setTel(employer.getTel());
         employerResult.setUserPrenom(employer.getUserPrenom());
         employerResult.setUserPassword(employer.getUserPassword());
+        employerResult.setProfession(employer.getProfession());
+        employerResult.setStatus(employer.getStatus());
         if (employer.getRh() != null) {
             employerResult.setRhId(employer.getRh().getUserId());
         }

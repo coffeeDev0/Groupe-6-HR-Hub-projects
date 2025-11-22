@@ -17,5 +17,7 @@ public class EmployerRequest {
     private String email;
     private String tel;
     private String userPrenom;
+    private String profession;
+    private String status;
 
 }
