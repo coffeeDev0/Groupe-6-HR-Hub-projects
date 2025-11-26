@@ -1,10 +1,22 @@
-import { useState } from 'react';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from './ui/dialog';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
-import { Textarea } from './ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "./ui/dialog";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import { Textarea } from "./ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 
 interface LeaveRequest {
   type: string;
@@ -19,18 +31,22 @@ interface LeaveRequestModalProps {
   onSave: (request: Partial<LeaveRequest>) => void;
 }
 
-export function LeaveRequestModal({ isOpen, onClose, onSave }: LeaveRequestModalProps) {
+export function LeaveRequestModal({
+  isOpen,
+  onClose,
+  onSave,
+}: LeaveRequestModalProps) {
   const [formData, setFormData] = useState({
-    type: '',
-    startDate: '',
-    endDate: '',
-    reason: '',
+    type: "",
+    startDate: "",
+    endDate: "",
+    reason: "",
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSave(formData);
-    setFormData({ type: '', startDate: '', endDate: '', reason: '' });
+    setFormData({ type: "", startDate: "", endDate: "", reason: "" });
   };
 
   return (
@@ -45,7 +61,11 @@ export function LeaveRequestModal({ isOpen, onClose, onSave }: LeaveRequestModal
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="type">Type de congé</Label>
-            <Select value={formData.type} onValueChange={(value) => setFormData({ ...formData, type: value })}>
+            <Select
+              value={formData.type}
+              onValueChange={(value: any) =>
+                setFormData({ ...formData, type: value })
+              }>
               <SelectTrigger>
                 <SelectValue placeholder="Sélectionner un type" />
               </SelectTrigger>
@@ -54,11 +74,13 @@ export function LeaveRequestModal({ isOpen, onClose, onSave }: LeaveRequestModal
                 <SelectItem value="RTT">RTT</SelectItem>
                 <SelectItem value="Congé maladie">Congé maladie</SelectItem>
                 <SelectItem value="Congé parental">Congé parental</SelectItem>
-                <SelectItem value="Congé sans solde">Congé sans solde</SelectItem>
+                <SelectItem value="Congé sans solde">
+                  Congé sans solde
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
-          
+
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="startDate">Date de début</Label>
@@ -66,7 +88,9 @@ export function LeaveRequestModal({ isOpen, onClose, onSave }: LeaveRequestModal
                 id="startDate"
                 type="date"
                 value={formData.startDate}
-                onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, startDate: e.target.value })
+                }
                 required
               />
             </div>
@@ -76,24 +100,28 @@ export function LeaveRequestModal({ isOpen, onClose, onSave }: LeaveRequestModal
                 id="endDate"
                 type="date"
                 value={formData.endDate}
-                onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, endDate: e.target.value })
+                }
                 required
               />
             </div>
           </div>
-          
+
           <div className="space-y-2">
             <Label htmlFor="reason">Raison</Label>
             <Textarea
               id="reason"
               placeholder="Décrivez la raison de votre demande..."
               value={formData.reason}
-              onChange={(e) => setFormData({ ...formData, reason: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, reason: e.target.value })
+              }
               required
               rows={4}
             />
           </div>
-          
+
           <div className="flex gap-3 justify-end pt-4">
             <Button type="button" variant="outline" onClick={onClose}>
               Annuler

@@ -1,9 +1,21 @@
-import { useState, useEffect } from 'react';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from './ui/dialog';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { useState, useEffect } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "./ui/dialog";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 
 interface Employee {
   id: number;
@@ -13,7 +25,7 @@ interface Employee {
   position: string;
   department: string;
   hireDate: string;
-  status: 'active' | 'inactive';
+  status: "active" | "inactive";
 }
 
 interface EmployeeModalProps {
@@ -23,15 +35,20 @@ interface EmployeeModalProps {
   employee: Employee | null;
 }
 
-export function EmployeeModal({ isOpen, onClose, onSave, employee }: EmployeeModalProps) {
+export function EmployeeModal({
+  isOpen,
+  onClose,
+  onSave,
+  employee,
+}: EmployeeModalProps) {
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    position: '',
-    department: '',
-    hireDate: '',
-    status: 'active' as 'active' | 'inactive',
+    firstName: "",
+    lastName: "",
+    email: "",
+    position: "",
+    department: "",
+    hireDate: "",
+    status: "active" as "active" | "inactive",
   });
 
   useEffect(() => {
@@ -39,13 +56,13 @@ export function EmployeeModal({ isOpen, onClose, onSave, employee }: EmployeeMod
       setFormData(employee);
     } else {
       setFormData({
-        firstName: '',
-        lastName: '',
-        email: '',
-        position: '',
-        department: '',
-        hireDate: '',
-        status: 'active',
+        firstName: "",
+        lastName: "",
+        email: "",
+        position: "",
+        department: "",
+        hireDate: "",
+        status: "active",
       });
     }
   }, [employee]);
@@ -59,7 +76,9 @@ export function EmployeeModal({ isOpen, onClose, onSave, employee }: EmployeeMod
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>{employee ? 'Modifier l\'employé' : 'Ajouter un employé'}</DialogTitle>
+          <DialogTitle>
+            {employee ? "Modifier l'employé" : "Ajouter un employé"}
+          </DialogTitle>
           <DialogDescription>
             Remplissez les informations de l'employé
           </DialogDescription>
@@ -71,7 +90,9 @@ export function EmployeeModal({ isOpen, onClose, onSave, employee }: EmployeeMod
               <Input
                 id="firstName"
                 value={formData.firstName}
-                onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, firstName: e.target.value })
+                }
                 required
               />
             </div>
@@ -80,36 +101,46 @@ export function EmployeeModal({ isOpen, onClose, onSave, employee }: EmployeeMod
               <Input
                 id="lastName"
                 value={formData.lastName}
-                onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, lastName: e.target.value })
+                }
                 required
               />
             </div>
           </div>
-          
+
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input
               id="email"
               type="email"
               value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
               required
             />
           </div>
-          
+
           <div className="space-y-2">
             <Label htmlFor="position">Poste</Label>
             <Input
               id="position"
               value={formData.position}
-              onChange={(e) => setFormData({ ...formData, position: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, position: e.target.value })
+              }
               required
             />
           </div>
-          
+
           <div className="space-y-2">
             <Label htmlFor="department">Département</Label>
-            <Select value={formData.department} onValueChange={(value) => setFormData({ ...formData, department: value })}>
+            <Select
+              value={formData.department}
+              onValueChange={(value: any) =>
+                setFormData({ ...formData, department: value })
+              }>
               <SelectTrigger>
                 <SelectValue placeholder="Sélectionner un département" />
               </SelectTrigger>
@@ -122,21 +153,27 @@ export function EmployeeModal({ isOpen, onClose, onSave, employee }: EmployeeMod
               </SelectContent>
             </Select>
           </div>
-          
+
           <div className="space-y-2">
             <Label htmlFor="hireDate">Date d'embauche</Label>
             <Input
               id="hireDate"
               type="date"
               value={formData.hireDate}
-              onChange={(e) => setFormData({ ...formData, hireDate: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, hireDate: e.target.value })
+              }
               required
             />
           </div>
-          
+
           <div className="space-y-2">
             <Label htmlFor="status">Statut</Label>
-            <Select value={formData.status} onValueChange={(value: 'active' | 'inactive') => setFormData({ ...formData, status: value })}>
+            <Select
+              value={formData.status}
+              onValueChange={(value: "active" | "inactive") =>
+                setFormData({ ...formData, status: value })
+              }>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
@@ -146,13 +183,13 @@ export function EmployeeModal({ isOpen, onClose, onSave, employee }: EmployeeMod
               </SelectContent>
             </Select>
           </div>
-          
+
           <div className="flex gap-3 justify-end pt-4">
             <Button type="button" variant="outline" onClick={onClose}>
               Annuler
             </Button>
             <Button type="submit" className="bg-blue-600 hover:bg-blue-700">
-              {employee ? 'Modifier' : 'Ajouter'}
+              {employee ? "Modifier" : "Ajouter"}
             </Button>
           </div>
         </form>

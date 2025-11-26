@@ -1,24 +1,93 @@
-import { useState } from 'react';
-import { Button } from '../components/ui/button';
-import { Input } from '../components/ui/input';
-import { Label } from '../components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
-import { Building2 } from 'lucide-react';
+import { useState } from "react";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../components/ui/select";
+import { Building2 } from "lucide-react";
+import { toast } from "sonner";
 
 interface LoginProps {
-  onLogin: (role: 'admin' | 'hr' | 'employee') => void;
+  onLogin: (role: "admin" | "hr" | "employee") => void;
   onSignUpClick: () => void;
 }
 
 export function Login({ onLogin, onSignUpClick }: LoginProps) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [role, setRole] = useState<'admin' | 'hr' | 'employee'>('employee');
+  const [userMail, setUserMail] = useState("");
+  const [password, setPassword] = useState("");
+  const [role, setRole] = useState<"admin" | "hr" | "employee">("employee"); // Gardé comme tu veux
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onLogin(role);
+    setIsLoading(true);
+
+    try {
+      // AUTHENTIFICATION (ON NE CHANGE PAS TON SERVICE)
+      const response = await fetch("http://10.138.94.91:8000/api/auth/login/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userMail: userMail,
+          password: password,
+          role: role,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        toast.error(errorData.message || "Identifiants invalides");
+        return;
+      }
+
+      const data = await response.json();
+      toast.success("Connexion1 réussie !");
+
+      // Stockage du token
+      if (data.token) {
+        localStorage.setItem("authToken", data.token);
+      }
+
+      // RÉCUPÉRATION DU USER DANS employer-service
+      const userRes = await fetch(
+        `http://10.138.94.91:8085/user/email/${userMail}`
+      );
+
+      if (!userRes.ok) {
+        toast.error("Impossible de récupérer les données utilisateur.");
+        console.error(await userRes.text());
+        return;
+      }
+
+      const userData = await userRes.json();
+
+      // Stockage complet du user dans le navigateur
+      localStorage.setItem("user", JSON.stringify(userData));
+      localStorage.setItem("userId", userData.id);
+      localStorage.setItem("role", userData.role);
+      console.log(localStorage.getItem("user"));
+      // Le vrai rôle backend
+
+      // La logique actuelle reste la même
+      onLogin(role);
+    } catch (err) {
+      console.error(err);
+      toast.error("Erreur réseau lors de la connexion");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -45,8 +114,8 @@ export function Login({ onLogin, onSignUpClick }: LoginProps) {
                 id="email"
                 type="email"
                 placeholder="exemple@entreprise.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={userMail}
+                onChange={(e) => setUserMail(e.target.value)}
                 required
               />
             </div>
@@ -61,9 +130,15 @@ export function Login({ onLogin, onSignUpClick }: LoginProps) {
                 required
               />
             </div>
+
+            {/* Ton select rôle reste comme tu veux */}
             <div className="space-y-2">
               <Label htmlFor="role">Je suis</Label>
-              <Select value={role} onValueChange={(value: 'admin' | 'hr' | 'employee') => setRole(value)}>
+              <Select
+                value={role}
+                onValueChange={(value: "admin" | "hr" | "employee") =>
+                  setRole(value)
+                }>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -74,21 +149,20 @@ export function Login({ onLogin, onSignUpClick }: LoginProps) {
                 </SelectContent>
               </Select>
             </div>
-            <div className="flex items-center justify-between">
-              <a href="#" className="text-sm text-blue-600 hover:underline dark:text-blue-400">
-                Mot de passe oublié ?
-              </a>
-            </div>
-            <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
-              Connexion
+
+            <Button
+              type="submit"
+              className="w-full bg-blue-600 hover:bg-blue-700"
+              disabled={isLoading}>
+              {isLoading ? "Connexion..." : "Connexion"}
             </Button>
+
             <div className="text-center text-sm text-gray-600 dark:text-gray-400">
-              Pas encore de compte ?{' '}
-              <button 
+              Pas encore de compte ?{" "}
+              <button
                 type="button"
                 onClick={onSignUpClick}
-                className="text-blue-600 hover:underline dark:text-blue-400"
-              >
+                className="text-blue-600 hover:underline dark:text-blue-400">
                 S'inscrire
               </button>
             </div>
