@@ -1,0 +1,142 @@
+services:
+  postgres-db:
+    image: postgres:16
+    container_name: postgres-db
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: prosper
+      POSTGRES_PASSWORD: prosper
+    volumes:
+      - erp_employe_data:/var/lib/postgresql/data
+    networks:
+        - erp-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U prosper"]
+      interval: 25s
+      timeout: 25s
+      retries: 5
+      start_period: 60s
+  bank-config-service:
+    build: ./bank_config_service
+    container_name: bank-config-service
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_APPLICATION_NAME: bank-config-service
+      SERVER_PORT: 8080
+      SPRING_CLOUD_CONFIG_SERVER_GIT_URI: https://github.com/banking-project-chenjo/cloud-conf.git
+      SPRING_CLOUD_CONFIG_SERVER_GIT_DEFAULT_LABEL: main
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://bank-config-service:8080/actuator/health"]
+      interval: 25s
+      timeout: 25s
+      retries: 5
+      start_period: 60s
+    networks:
+      - erp-network
+
+  bank-registry-service:
+    build: ./bank-registry-service
+    container_name: bank-registry-service
+    ports:
+      - "8761:8761"
+    environment:
+      SPRING_APPLICATION_NAME: bank-registry-service
+      SERVER_PORT: 8761
+      SPRING_CLOUD_CONFIG_URI: http://bank-config-service:8080
+      SPRING_CONFIG_IMPORT: "optional:configserver:http://bank-config-service:8080"
+    depends_on:
+      bank-config-service:
+        condition: service_healthy
+    restart: on-failure
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://bank-registry-service:8761/actuator/health"]
+      interval: 25s
+      timeout: 25s
+      retries: 5
+      start_period: 60s
+
+    networks:
+      - erp-network
+
+  bank-gateway-service:
+    build: ./bank-gateway-service
+    container_name: bank-gateway-service
+    ports:
+      - "8000:8000"
+    depends_on:
+      bank-config-service:
+        condition: service_healthy
+      bank-registry-service:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: bank-gateway-service
+      SERVER_PORT: 8000
+      SPRING_CLOUD_CONFIG_URI: http://bank-config-service:8080
+      SPRING_CONFIG_IMPORT: "optional:configserver:http://bank-config-service:8080" 
+    networks:
+      - erp-network
+
+  rabbitmq-broker:
+    image: rabbitmq:3.13-management
+    container_name: rabbitmq-broker
+    ports:
+      - "5673:5672"  
+      - "15673:15672" 
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - erp-network
+  employe-service:
+    build: ./employer-service
+    container_name: employer-service
+    ports:
+      - "8085:8085"
+    depends_on:
+      bank-config-service:
+        condition: service_healthy
+      bank-registry-service:
+        condition: service_healthy
+      postgres-db:
+        condition: service_healthy
+      rabbitmq-broker: 
+        condition: service_started
+    environment:
+      SPRING_APPLICATION_NAME: employer-service
+      SERVER_PORT: 8085
+      SPRING_CLOUD_CONFIG_URI: http://bank-config-service:8080
+      SPRING_CONFIG_IMPORT: "optional:configserver:http://bank-config-service:8080"
+    networks:
+      - erp-network
+
+  conge-service:
+    build: ./conge-service
+    container_name: conge-service
+    ports:
+      - "8084:8084"
+    depends_on:
+      bank-config-service:
+        condition: service_healthy
+      bank-registry-service:
+        condition: service_healthy
+      postgres-db:
+        condition: service_healthy
+      rabbitmq-broker: 
+        condition: service_started
+    environment:
+      SPRING_APPLICATION_NAME: conge-service
+      SERVER_PORT: 8084
+      SPRING_CLOUD_CONFIG_URI: http://bank-config-service:8080
+      SPRING_CONFIG_IMPORT: "optional:configserver:http://bank-config-service:8080"
+    networks:
+      - erp-network
+
+networks:
+  erp-network:
+    driver: bridge
+
+volumes:
+  erp_employe_data:
