@@ -1,14 +1,15 @@
 from authentification.models import User
-from services.password_hasher import PasswordHasher
-from services.jwt_provider import JwtProvider
+
+from authentification.services.jwt_provider import JwtProvider
+from authentification.services.password_hasher import PasswordHasher
 
 
 class AuthenticationService:
 
     @staticmethod
-    def authenticate_user(userName: str, password: str):
+    def authenticate_user(userMail, password):
         try:
-            user = User.objects.get(userName=userName)
+            user = User.objects.get(userMail__iexact=userMail)
         except User.DoesNotExist:
             return None
 
@@ -18,5 +19,5 @@ class AuthenticationService:
         return None
 
     @staticmethod
-    def generate_token(user: User):
+    def generate_token(user):
         return JwtProvider.create_token(user)
