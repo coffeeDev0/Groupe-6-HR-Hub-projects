@@ -7,51 +7,56 @@ from django.contrib.auth.models import (
 
 
 class UserManager(BaseUserManager):
-    def create_user(
-        self,
-        userMail,
-        userName,
-        userForName,
-        phoneNumber,
-        password=None,
-        role="Employee",
-    ):
+
+    class TypeRole(models.TextChoices):
+        ADMIN = "Admin"
+        RH = "Rh"
+        EMPLOYEE = "Employee"
+
+    def create_user(self, userMail, password=None, **extra_fields):
         if not userMail:
             raise ValueError("L'adresse Mail est obligatoire")
-        user = self.model(
-            userMail=userMail,
-            userName=userName,
-            userForName=userForName,
-            phoneNumber=phoneNumber,
-            role=role,
-        )
+
+        extra_fields.setdefault("role", self.TypeRole.EMPLOYEE)
+
+        user = self.model(userMail=self.normalize_email(userMail), **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
+
         return user
 
-    def create_superuser(self, userMail, password=None):
-        user = self.create_user(userMail, "", "", 000000000, password, role="Admin")
-        user.is_staff = True
-        user.is_superuser = True
-        user.save(using=self._db)
-        return user
+    def create_superuser(self, userMail, password=None, **extra_fields):
+
+        extra_fields.setdefault("role", self.TypeRole.ADMIN)
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
+
+        return self.create_user(userMail, password, **extra_fields)
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+
+    class TypeRole(models.TextChoices):
+        ADMIN = "Admin"
+        RH = "Rh"
+        EMPLOYEE = "Employee"
+
     userId = models.AutoField(primary_key=True)
     userMail = models.EmailField(max_length=100, unique=True)
     userName = models.CharField(max_length=100)
     userForName = models.CharField(max_length=100)
-    password = models.CharField(max_length=255)
-    phoneNumber = models.IntegerField(max_length=9, null=True)
-    role = models.CharField(max_length=50, default="Employee")
+    phoneNumber = models.IntegerField(null=True)
+    role = models.CharField(
+        max_length=50, choices=TypeRole.choices, default=TypeRole.EMPLOYEE
+    )
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(default=False)
 
     objects = UserManager()
 
     USERNAME_FIELD = "userMail"
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ["userName", "userForName", "phoneNumber"]
 
     def __str__(self):
         return self.userName

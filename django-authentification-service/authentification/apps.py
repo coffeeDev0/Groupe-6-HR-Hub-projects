@@ -7,5 +7,7 @@ class AuthentificationConfig(AppConfig):
 
     def ready(self):
         from .rabbit_listener import start_rabbit_listener
+        from .eureka_client import start_eureka_client
 
         start_rabbit_listener()
+        start_eureka_client()

@@ -1,6 +1,6 @@
-from ..models import User
-from .password_hasher import PasswordHasher
-from .jwt_provider import JwtProvider
+from authentification.models import User
+from services.password_hasher import PasswordHasher
+from services.jwt_provider import JwtProvider
 
 
 class AuthenticationService:
@@ -14,6 +14,7 @@ class AuthenticationService:
 
         if PasswordHasher.verify(password, user.password):
             return user
+
         return None
 
     @staticmethod

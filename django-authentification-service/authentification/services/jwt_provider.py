@@ -16,6 +16,7 @@ class JwtProvider:
             "exp": datetime.utcnow() + timedelta(hours=1),
             "iat": datetime.utcnow(),
         }
+
         return jwt.encode(
             payload, JwtProvider.SECRET_KEY, algorithm=JwtProvider.ALGORITHM
         )

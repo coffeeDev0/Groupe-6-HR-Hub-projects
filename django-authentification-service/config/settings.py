@@ -10,6 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+from datetime import timedelta
+
+from corsheaders.defaults import default_methods, default_headers
+
 import os
 import requests
 
@@ -61,23 +65,10 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "corsheaders",
     "rest_framework",
+    "rest_framework_simplejwt",
     "authentification",
 ]
 
-REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
-    ),
-}
-
-from datetime import timedelta
-
-SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
-    "USER_ID_FIELD": "userId",
-    "USER_ID_CLAIM": "user_id",
-}
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -116,9 +107,9 @@ WSGI_APPLICATION = "config.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "auth_db",
-        "USER": "postgres",
-        "PASSWORD": "postgres",
+        "NAME": "authentification_db",
+        "USER": "hrh_user",
+        "PASSWORD": "hrh-password",
         "HOST": "localhost",
         "PORT": "5432",
     }
@@ -168,23 +159,29 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "authentification.User"
 
-CORS_ALLOW_ALL_ORIGINS = True
+
+REST_FRAMEWORK = {
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
+    "PAGE_SIZE": 50,
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "USER_ID_FIELD": "userId",
+}
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8000",
+]
 
 CORS_ALLOW_METHODS = [
-    "GET",
-    "POST",
-    "PUT",
-    "PATCH",
-    "DELETE",
-    "OPTIONS",
+    *default_methods,
 ]
 
 CORS_ALLOW_HEADERS = [
-    "authorization",
-    "content-type",
-    "accept",
-    "origin",
-    "x-csrftoken",
+    *default_headers,
 ]
-
-CORS_EXPOSE_HEADERS = ["Authorization"]

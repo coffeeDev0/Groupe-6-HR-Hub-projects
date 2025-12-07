@@ -17,9 +17,8 @@ def main():
         ) from exc
     execute_from_command_line(sys.argv)
 
-    from authentification.eureka_client import start_eureka_client
-
-    start_eureka_client()
+    # from authentification.eureka_client import start_eureka_client
+    # start_eureka_client()
 
 
 if __name__ == "__main__":
