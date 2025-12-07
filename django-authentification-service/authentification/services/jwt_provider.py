@@ -1,40 +1,46 @@
-import jwt
-from datetime import datetime, timedelta
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.exceptions import TokenError
+from rest_framework_simplejwt.backends import TokenBackend
+
 from django.conf import settings
 
 
 class JwtProvider:
-    SECRET_KEY = settings.SECRET_KEY
-    ALGORITHM = "HS256"
 
     @staticmethod
     def create_token(user):
-        payload = {
-            "userId": user.userId,
-            "userName": user.userName,
-            "role": user.role,
-            "exp": datetime.utcnow() + timedelta(hours=1),
-            "iat": datetime.utcnow(),
+        refresh = RefreshToken.for_user(user)
+        access = refresh.access_token
+
+        return {
+            "access": str(access),
+            "refresh": str(refresh),
+            "access_expires": access.get("exp"),
+            "role": str(user.role),
         }
 
-        return jwt.encode(
-            payload, JwtProvider.SECRET_KEY, algorithm=JwtProvider.ALGORITHM
-        )
-
     @staticmethod
-    def validate_token(token):
+    def refresh_token(token):
         try:
-            jwt.decode(
-                token, JwtProvider.SECRET_KEY, algorithms=[JwtProvider.ALGORITHM]
-            )
-            return True
-        except jwt.ExpiredSignatureError:
-            return False
-        except jwt.InvalidTokenError:
-            return False
+            refresh = RefreshToken(token)
+            new_access = refresh.access_token
+
+            # Optionnel : rotation automatique (désactivée ici)
+            # new_refresh = RefreshToken.for_user(refresh.user)
+
+            return {"access": str(new_access), "refresh": str(refresh)}
+
+        except TokenError:
+            raise Exception("Refresh token invalide ou expiré")
 
     @staticmethod
-    def get_claims(token):
-        return jwt.decode(
-            token, JwtProvider.SECRET_KEY, algorithms=[JwtProvider.ALGORITHM]
-        )
+    def verify_token(token):
+        try:
+            backend = TokenBackend(
+                algorithm=settings.SIMPLE_JWT["ALGORITHM"],
+                signing_key=settings.SIMPLE_JWT["SIGNING_KEY"],
+            )
+            return backend.decode(token, verify=True)
+
+        except Exception:
+            raise Exception("Token invalide")
