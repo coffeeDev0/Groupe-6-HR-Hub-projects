@@ -25,7 +25,7 @@ function authHeaders(contentType = "application/json") {
   return headers;
 }
 
-const BASE = "http://10.138.94.91:8085";
+const BASE = "http://10.189.5.91:8085";
 
 export const userApi = {
   async getAllUsers(): Promise<UserDTO[]> {
@@ -85,7 +85,7 @@ export const userApi = {
     const res = await fetch(`${BASE}/user/update/${id}`, {
       method: "PUT",
       headers: authHeaders("application/json"),
-      body: JSON.stringify(payload.password ?? JSON.stringify(payload)),
+      body: JSON.stringify(payload.userPassword ?? JSON.stringify(payload)),
     });
 
     if (!res.ok) {
@@ -102,18 +102,17 @@ export const userApi = {
   },
 
   async setRole(id: string, role: string): Promise<string> {
-    // According to your spec: POST /admin/attribute/{id} with body like "EMPLOYER"
-    const res = await fetch(`${BASE}/admin/attribute/${id}`, {
-      method: "POST",
-      headers: authHeaders("text/plain"),
-      body: role,
-    });
-    if (!res.ok) {
-      const text = await res.text();
-      throw new Error(`POST /admin/attribute/${id} failed: ${res.status} ${text}`);
-    }
-    return res.text();
-  },
+  const res = await fetch(`${BASE}/admin/attribute/${id}`, {
+    method: "POST",
+    headers: authHeaders("application/json"),
+    body: JSON.stringify(role), 
+  });
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`POST /admin/attribute/${id} failed: ${res.status} ${text}`);
+  }
+  return res.text();
+},
 
   async updateRhStatus(userId: string, status: string): Promise<string> {
     // PUT /rh/update/{userId} expects a raw string in body
@@ -138,6 +137,14 @@ export const userApi = {
     return res.json();
   },
 
+  async getAllRh(): Promise<UserDTO[]> {
+    const res = await fetch(`${BASE}/rh/all`, {
+      method: "GET",
+      headers: authHeaders(undefined),
+    });
+    if (!res.ok) throw new Error(`GET /employer/all failed: ${res.status}`);
+    return res.json();
+  },
   async addEmployer(payload: Partial<UserDTO>): Promise<UserDTO> {
     const res = await fetch(`${BASE}/employer/add`, {
       method: "POST",
@@ -159,5 +166,22 @@ export const userApi = {
   if (!res.ok) throw new Error(`DELETE /user/email/${email} failed`);
   return res.text();
 },
+
+async addRh(payload: any) {
+  const res = await fetch(`${BASE}/rh/add`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!res.ok) {
+    throw new Error(`Erreur serveur: ${res.status}`);
+  }
+
+  return await res.json();
+}
+
 
 };

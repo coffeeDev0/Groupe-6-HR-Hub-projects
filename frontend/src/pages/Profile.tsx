@@ -1,4 +1,6 @@
-import { useState } from 'react';
+// === Profile.tsx (profil utilisateur connecté + historique congés) ===
+
+import React, { useState, useEffect } from 'react';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Input } from '../components/ui/input';
@@ -6,30 +8,51 @@ import { Label } from '../components/ui/label';
 import { Badge } from '../components/ui/badge';
 import { Avatar, AvatarFallback } from '../components/ui/avatar';
 import { User, Mail, Phone, Briefcase, Calendar, Edit } from 'lucide-react';
-import { toast } from 'sonner@2.0.3';
-
-const leaveHistory = [
-  { id: 1, type: 'Congés payés', startDate: '2025-08-15', endDate: '2025-08-29', status: 'approved' },
-  { id: 2, type: 'RTT', startDate: '2025-07-12', endDate: '2025-07-12', status: 'approved' },
-  { id: 3, type: 'Congé maladie', startDate: '2025-06-05', endDate: '2025-06-07', status: 'approved' },
-  { id: 4, type: 'Congés payés', startDate: '2025-11-15', endDate: '2025-11-22', status: 'pending' },
-];
+import { toast } from 'sonner';
+import { userApi, UserDTO } from '../api/userApi';
+import { demandeApi, DemandeDTO } from '../api/demandeApi';
 
 export function Profile() {
   const [isEditing, setIsEditing] = useState(false);
-  const [profileData, setProfileData] = useState({
-    firstName: 'Marie',
-    lastName: 'Dupont',
-    email: 'marie.dupont@entreprise.com',
-    phone: '+33 6 12 34 56 78',
-    position: 'Développeur Senior',
-    department: 'IT',
-    hireDate: '2020-03-15',
-  });
+  const [profileData, setProfileData] = useState<UserDTO | null>(null);
+  const [leaveHistory, setLeaveHistory] = useState<DemandeDTO[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleSave = () => {
-    setIsEditing(false);
-    toast.success('Profil mis à jour avec succès');
+  const stored = localStorage.getItem('user');
+  const currentUser = stored ? JSON.parse(stored) : null;
+  const userEmail = currentUser?.email;
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        setLoading(true);
+        if (!userEmail) return;
+
+        const user = await userApi.getUserByEmail(userEmail);
+        setProfileData(user);
+
+        const demandes = await demandeApi.getByEmail(userEmail);
+        setLeaveHistory(demandes);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, [userEmail]);
+
+  const handleSave = async () => {
+    if (!profileData) return;
+    try {
+      await userApi.updateUserInfo(profileData.userId!, profileData);
+      setIsEditing(false);
+      toast.success('Profil mis à jour avec succès');
+    } catch (err) {
+      console.error(err);
+      toast.error('Erreur lors de la mise à jour');
+    }
   };
 
   const getStatusBadge = (status: string) => {
@@ -44,6 +67,8 @@ export function Profile() {
         return null;
     }
   };
+
+  if (loading || !profileData) return <div className="text-center py-8">Chargement...</div>;
 
   return (
     <div className="space-y-6">
@@ -67,16 +92,16 @@ export function Profile() {
               <div className="flex flex-col items-center text-center space-y-4">
                 <Avatar className="size-24">
                   <AvatarFallback className="bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 text-2xl">
-                    {profileData.firstName[0]}{profileData.lastName[0]}
+                    {profileData.userPrenom?.[0]}{profileData.userName?.[0]}
                   </AvatarFallback>
                 </Avatar>
                 <div>
                   <h2 className="text-xl text-gray-900 dark:text-white">
-                    {profileData.firstName} {profileData.lastName}
+                    {profileData.userPrenom} {profileData.userName}
                   </h2>
-                  <p className="text-gray-600 dark:text-gray-400 mt-1">{profileData.position}</p>
+                  <p className="text-gray-600 dark:text-gray-400 mt-1">{profileData.profession}</p>
                   <Badge className="mt-2 bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-400">
-                    {profileData.department}
+                    {profileData.status}
                   </Badge>
                 </div>
                 <div className="w-full pt-4 space-y-3 border-t border-gray-200 dark:border-gray-700">
@@ -86,35 +111,9 @@ export function Profile() {
                   </div>
                   <div className="flex items-center gap-3 text-sm">
                     <Phone className="size-4 text-gray-400" />
-                    <span className="text-gray-600 dark:text-gray-400">{profileData.phone}</span>
-                  </div>
-                  <div className="flex items-center gap-3 text-sm">
-                    <Calendar className="size-4 text-gray-400" />
-                    <span className="text-gray-600 dark:text-gray-400">
-                      Depuis {new Date(profileData.hireDate).toLocaleDateString('fr-FR')}
-                    </span>
+                    <span className="text-gray-600 dark:text-gray-400">{profileData.tel}</span>
                   </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="mt-6">
-            <CardHeader>
-              <CardTitle>Solde de congés</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600 dark:text-gray-400">Congés payés</span>
-                <span className="text-gray-900 dark:text-white">15 jours</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600 dark:text-gray-400">RTT</span>
-                <span className="text-gray-900 dark:text-white">8 jours</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600 dark:text-gray-400">Congés pris</span>
-                <span className="text-gray-900 dark:text-white">10 jours</span>
               </div>
             </CardContent>
           </Card>
@@ -127,75 +126,36 @@ export function Profile() {
                 <User className="size-5 text-blue-600" />
                 Informations personnelles
               </CardTitle>
-              <CardDescription>
-                {isEditing ? 'Modifiez vos informations' : 'Vos informations personnelles'}
-              </CardDescription>
+              <CardDescription>{isEditing ? 'Modifiez vos informations' : 'Vos informations personnelles'}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="firstName">Prénom</Label>
-                  <Input
-                    id="firstName"
-                    value={profileData.firstName}
-                    onChange={(e) => setProfileData({ ...profileData, firstName: e.target.value })}
-                    disabled={!isEditing}
-                  />
+                  <Input id="firstName" value={profileData.userPrenom || ''} disabled={!isEditing}
+                    onChange={(e) => setProfileData({...profileData, userPrenom: e.target.value})} />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="lastName">Nom</Label>
-                  <Input
-                    id="lastName"
-                    value={profileData.lastName}
-                    onChange={(e) => setProfileData({ ...profileData, lastName: e.target.value })}
-                    disabled={!isEditing}
-                  />
+                  <Input id="lastName" value={profileData.userName || ''} disabled={!isEditing}
+                    onChange={(e) => setProfileData({...profileData, userName: e.target.value})} />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={profileData.email}
-                    onChange={(e) => setProfileData({ ...profileData, email: e.target.value })}
-                    disabled={!isEditing}
-                  />
+                  <Input id="email" type="email" value={profileData.email || ''} disabled={!isEditing}
+                    onChange={(e) => setProfileData({...profileData, email: e.target.value})} />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="phone">Téléphone</Label>
-                  <Input
-                    id="phone"
-                    value={profileData.phone}
-                    onChange={(e) => setProfileData({ ...profileData, phone: e.target.value })}
-                    disabled={!isEditing}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="position">Poste</Label>
-                  <Input
-                    id="position"
-                    value={profileData.position}
-                    disabled
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="department">Département</Label>
-                  <Input
-                    id="department"
-                    value={profileData.department}
-                    disabled
-                  />
+                  <Input id="phone" value={profileData.tel || ''} disabled={!isEditing}
+                    onChange={(e) => setProfileData({...profileData, tel: e.target.value})} />
                 </div>
               </div>
-              
+
               {isEditing && (
                 <div className="flex gap-3 justify-end mt-6">
-                  <Button variant="outline" onClick={() => setIsEditing(false)}>
-                    Annuler
-                  </Button>
-                  <Button onClick={handleSave} className="bg-blue-600 hover:bg-blue-700">
-                    Enregistrer
-                  </Button>
+                  <Button variant="outline" onClick={() => setIsEditing(false)}>Annuler</Button>
+                  <Button onClick={handleSave} className="bg-blue-600 hover:bg-blue-700">Enregistrer</Button>
                 </div>
               )}
             </CardContent>
@@ -207,9 +167,7 @@ export function Profile() {
                 <Briefcase className="size-5 text-blue-600" />
                 Historique des congés
               </CardTitle>
-              <CardDescription>
-                Vos demandes de congés récentes
-              </CardDescription>
+              <CardDescription>Vos demandes de congés récentes</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="overflow-x-auto">
@@ -224,21 +182,16 @@ export function Profile() {
                   </thead>
                   <tbody>
                     {leaveHistory.map((leave) => (
-                      <tr key={leave.id} className="border-b border-gray-100 dark:border-gray-800">
-                        <td className="py-3 px-4">
-                          <Badge variant="secondary">{leave.type}</Badge>
-                        </td>
-                        <td className="py-3 px-4 text-gray-600 dark:text-gray-400">
-                          {new Date(leave.startDate).toLocaleDateString('fr-FR')}
-                        </td>
-                        <td className="py-3 px-4 text-gray-600 dark:text-gray-400">
-                          {new Date(leave.endDate).toLocaleDateString('fr-FR')}
-                        </td>
+                      <tr key={leave.demandeId} className="border-b border-gray-100 dark:border-gray-800">
+                        <td className="py-3 px-4"><Badge>{leave.raison}</Badge></td>
+                        <td className="py-3 px-4 text-gray-600 dark:text-gray-400">{new Date(leave.dateDebut).toLocaleDateString('fr-FR')}</td>
+                        <td className="py-3 px-4 text-gray-600 dark:text-gray-400">{new Date(leave.dateFin).toLocaleDateString('fr-FR')}</td>
                         <td className="py-3 px-4">{getStatusBadge(leave.status)}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
+                {!leaveHistory.length && <p className="text-center py-6 text-gray-500">Aucune demande de congé trouvée.</p>}
               </div>
             </CardContent>
           </Card>
@@ -247,3 +200,5 @@ export function Profile() {
     </div>
   );
 }
+
+export default Profile;

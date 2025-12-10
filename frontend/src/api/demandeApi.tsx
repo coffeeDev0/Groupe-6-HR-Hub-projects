@@ -10,7 +10,7 @@ export interface DemandeDTO {
   commentaire?: string;
 }
 
-const BASE = "http://10.138.94.91:8084";
+const BASE = "http://10.189.5.91:8084";
 
 function authHeaders(contentType?: string | null) {
   const token = localStorage.getItem("authToken");
